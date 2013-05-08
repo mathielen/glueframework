@@ -4,7 +4,7 @@ namespace Infrastructure\Persistence\Doctrine;
 use Infrastructure\Persistence\PersistenceException;
 use Infrastructure\Persistence\Repository;
 
-class Repository implements Repository
+class DoctrineRepository implements Repository
 {
 
 	/**

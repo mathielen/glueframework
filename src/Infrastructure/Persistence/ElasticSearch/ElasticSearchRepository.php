@@ -1,7 +1,7 @@
 <?php
 namespace Infrastructure\Persistence\ElasticSearch;
 
-class Repository implements \Infrastructure\Persistence\Repository
+class ElasticSearchRepository implements \Infrastructure\Persistence\Repository
 {
 
 	/**

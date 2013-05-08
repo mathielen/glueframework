@@ -5,7 +5,7 @@ use Doctrine\Common\Collections\Collection;
 
 use Doctrine\ORM\EntityManager;
 
-class Repository implements \Infrastructure\Persistence\Repository
+class Doctrine2Repository implements \Infrastructure\Persistence\Repository
 {
 
 	/**
