@@ -4,12 +4,8 @@
 		"php":	">=5.3.6"
 	},
 	
-	"suggest": {
-	    "monolog/monolog": "dev-master",
-        "doctrine/orm": "dev-master",
-        "doctrine/dbal": "dev-master",
-        "doctrine/common": "dev-master",
-        "ruflin/Elastica": "v0.19.8.0"
+	"require-dev": {
+        "symfony/event-dispatcher": "dev-master"
     },  
 
 	"autoload": {
