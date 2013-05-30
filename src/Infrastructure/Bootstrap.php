@@ -20,6 +20,9 @@ class Bootstrap
 	private $config;
 	private $isValid = false;
 
+	/**
+	 * @var ContainerInterface
+	 */
 	private static $container;
 
 	public function __construct(array $config)
@@ -154,6 +157,9 @@ class Bootstrap
 		return $bootstrap;
 	}
 
+	/**
+	 * @return ContainerInterface
+	 */
 	public static function containerInstance()
 	{
 		return self::$container;
