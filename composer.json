@@ -6,7 +6,8 @@
 	
 	"require-dev": {
         "symfony/event-dispatcher": "dev-master",
-        "symfony/security": "*"        
+        "symfony/security": "*",
+        "monolog/monolog": "dev-master"        
     },  
 
 	"autoload": {

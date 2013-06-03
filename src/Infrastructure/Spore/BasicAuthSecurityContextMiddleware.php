@@ -1,5 +1,5 @@
 <?php
-namespace Infrastructure\Security\Spore;
+namespace Infrastructure\Spore;
 
 use Infrastructure\Search\Dto\Query;
 
@@ -13,7 +13,7 @@ use RieberCheck\Credentials\CredentialProvider;
 
 use Slim\Middleware;
 
-class ApiAuthorizationMiddleware extends Middleware
+class BasicAuthSecurityContextMiddleware extends Middleware
 {
 
 	/**

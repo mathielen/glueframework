@@ -14,7 +14,7 @@ class GearmanPipelineTest extends \PHPUnit_Framework_TestCase
 
 	public function test()
 	{
-		global $logger;
+		/*global $logger;
         $logger = new Logger('GearmanPipelineTest');
         $handler = new StreamHandler('/tmp/log.log');
         $logger->pushHandler($handler);
@@ -26,7 +26,7 @@ class GearmanPipelineTest extends \PHPUnit_Framework_TestCase
 		$pipeline = GearmanPipeline::create($gearmanClient, $logger)
 			->pipeline('doException')
 			->pipeline('doStuff')
-			->run('some workload');
+			->run('some workload');*/
 	}
 
 }

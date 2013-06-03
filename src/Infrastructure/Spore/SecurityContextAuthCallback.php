@@ -1,5 +1,5 @@
 <?php
-namespace Infrastructure\Security\Spore;
+namespace Infrastructure\Spore;
 
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
@@ -9,7 +9,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
 
-class ApiAuthRolesCallback
+class SecurityContextAuthCallback
 {
 
 	/**
