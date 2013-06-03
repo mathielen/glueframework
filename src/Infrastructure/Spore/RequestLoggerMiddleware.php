@@ -2,7 +2,10 @@
 namespace Infrastructure\Spore;
 
 use Monolog\Logger;
-class RequestLoggerMiddleware
+
+use Slim\Middleware;
+
+class RequestLoggerMiddleware extends Middleware
 {
 
 	/**
@@ -17,6 +20,15 @@ class RequestLoggerMiddleware
 
 	public function call()
 	{
+		$request = $this->app->request();
+
+		if ($this->logger->isHandling(Logger::DEBUG)) {
+			$this->logger->debug('Endpoint access: '.$request->getPath().' from '.$request->getIp());
+			if ($request->session) {
+				$this->logger->debug('Has valid session: '.$request->session);
+			}
+		}
+
 		$this->next->call();
 	}
 
