@@ -22,10 +22,15 @@ class FactoryRepositoryWriter
 		$this->repository = $repository;
 	}
 
+	/**
+	 * @return Entity
+	 */
 	public function write($data = null)
 	{
 		$object = $this->factory->factor($data);
 		$this->repository->save($object);
+
+		return $object;
 	}
 
 }

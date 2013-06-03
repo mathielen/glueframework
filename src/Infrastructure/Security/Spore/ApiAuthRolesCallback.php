@@ -1,6 +1,8 @@
 <?php
 namespace Infrastructure\Security\Spore;
 
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
+
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -26,10 +28,14 @@ class ApiAuthRolesCallback
 			return true;
 		}
 
-		foreach ($roles as $role) {
-			if ($this->securityContext->isGranted($role)) {
-				return true;
+		try {
+			foreach ($roles as $role) {
+				if ($this->securityContext->isGranted($role)) {
+					return true;
+				}
 			}
+		} catch (AuthenticationException $e) {
+			return false;
 		}
 
 		return false;

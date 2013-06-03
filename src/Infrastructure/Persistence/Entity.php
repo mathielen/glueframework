@@ -4,6 +4,6 @@ namespace Infrastructure\Persistence;
 interface Entity
 {
 
-	//public $id;
+	public function getId();
 
 }
