@@ -108,7 +108,7 @@ class Bootstrap
 			$containerBuilder = new ContainerBuilder();
 
 			$loader = new XmlFileLoader($containerBuilder, new FileLocator($this->config['config_dir']));
-			$loader->load('context.xml');
+			$loader->load($this->config['context_file']);
 
 			foreach ($this->config as $name=>$value) {
 				$containerBuilder->setParameter(strtolower($name), $value);
@@ -137,7 +137,8 @@ class Bootstrap
 	{
 		return array(
 			'debug' => false,
-			'container_cacheclassname' => 'CachedContainer'
+			'container_cacheclassname' => 'CachedContainer',
+			'context_file' => 'context.xml'
 		);
 	}
 
