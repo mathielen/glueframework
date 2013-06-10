@@ -7,7 +7,9 @@
 	"require-dev": {
         "symfony/event-dispatcher": "dev-master",
         "symfony/security": "*",
-        "monolog/monolog": "dev-master"        
+        "monolog/monolog": "dev-master",
+        "dannykopping/spore": "dev-master",
+        "dannykopping/docblock": "dev-master"        
     },  
 
 	"autoload": {
