@@ -9,7 +9,7 @@ class BadRequestStatus
 	public $reasonException;
 
 	public function __construct(\Exception $reasonException) {
-		$this->reasonException = $reasonException->getMessage();
+		$this->reasonException = $reasonException->__toString();
 	}
 
 }

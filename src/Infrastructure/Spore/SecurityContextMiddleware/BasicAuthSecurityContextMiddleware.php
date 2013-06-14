@@ -1,5 +1,5 @@
 <?php
-namespace Infrastructure\Spore;
+namespace Infrastructure\Spore\SecurityContextMiddleware;
 
 use Infrastructure\Search\Dto\Query;
 
@@ -26,10 +26,9 @@ class BasicAuthSecurityContextMiddleware extends Middleware
 	 */
 	private $userFinder;
 
-	public function __construct(SecurityContextInterface $securityContext, Finder $userFinder)
+	public function __construct(SecurityContextInterface $securityContext)
 	{
 		$this->securityContext = $securityContext;
-		$this->userFinder = $userFinder;
 	}
 
 	public function call()
@@ -43,15 +42,9 @@ class BasicAuthSecurityContextMiddleware extends Middleware
 			$token = new UsernamePasswordToken(
 				$headerUsername,
 				$headerPassword,
-				'providerKey');
+				'providerKey'); //TODO providerkey?
 
 			$this->securityContext->setToken($token);
-
-			//set the current user
-			$users = $this->userFinder->search(new Query(array('username'=>$headerUsername)));
-			if (count($users) > 0) {
-				$request->currentUser = $users[0];
-			}
 		}
 
 		$this->next->call();
