@@ -6,10 +6,10 @@ class BadRequestStatus
 
 	public $statusCode = 400;
 	public $statusText = 'Bad Request';
-	public $reasonException;
+	public $reason;
 
-	public function __construct(\Exception $reasonException) {
-		$this->reasonException = $reasonException->__toString();
+	public function __construct($reason) {
+		$this->reason = $reason;
 	}
 
 }

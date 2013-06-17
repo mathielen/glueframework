@@ -6,10 +6,10 @@ class InternalServerErrorStatus
 
 	public $statusCode = 500;
 	public $statusText = 'Internal Server Error';
-	public $reasonException;
+	public $reason;
 
-	public function __construct(\Exception $reasonException) {
-		$this->reasonException = $reasonException->__toString();
+	public function __construct($reason) {
+		$this->reason = $reason;
 	}
 
 }

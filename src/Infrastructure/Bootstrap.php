@@ -10,6 +10,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher;
+use Monolog\Logger;
 
 class Bootstrap
 {
@@ -85,6 +86,7 @@ class Bootstrap
 			ini_set("display_errors", TRUE);
 			ini_set('display_startup_errors', TRUE);
 			error_reporting(E_ALL ^ E_NOTICE);
+			$this->config['loglevel'] = Logger::DEBUG;
 		}
 
 		if (file_exists($this->config['config_dir'] . '/config.ini')) {
@@ -138,7 +140,8 @@ class Bootstrap
 		return array(
 			'debug' => false,
 			'container_cacheclassname' => 'CachedContainer',
-			'context_file' => 'context.xml'
+			'context_file' => 'context.xml',
+			'loglevel' => Logger::INFO
 		);
 	}
 
@@ -164,6 +167,15 @@ class Bootstrap
 	public static function containerInstance()
 	{
 		return self::$container;
+	}
+
+	public static function isDebug()
+	{
+		if (self::$container) {
+			return self::$container->getParameter('debug');
+		}
+
+		return null;
 	}
 
 }

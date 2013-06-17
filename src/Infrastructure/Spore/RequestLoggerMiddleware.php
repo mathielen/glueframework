@@ -22,9 +22,9 @@ class RequestLoggerMiddleware extends Middleware
 	{
 		$request = $this->app->request();
 
-		if ($this->logger->isHandling(Logger::DEBUG)) {
-			$this->logger->debug('Endpoint access: '.$request->getPath().' from '.$request->getIp());
-			if ($request->session) {
+		if ($this->logger->isHandling(Logger::INFO)) {
+			$this->logger->info('Endpoint access: '.$request->getPath().' from '.$request->getIp());
+			if (@$request->session) {
 				$this->logger->debug('Has valid session: '.$request->session);
 			}
 		}
