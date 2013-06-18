@@ -124,13 +124,17 @@ class Bootstrap
 					$dumper->dump(array('class' => $containerCacheClass)),
 					$containerBuilder->getResources()
 				);
+			} else {
+				$container = $containerBuilder;
 			}
 		}
 
-		require_once $containerCacheFile;
-		$container = new $containerCacheClass();
-		self::$container = $container;
+		if (!$this->config['debug']) {
+			require_once $containerCacheFile;
+			$container = new $containerCacheClass();
+		}
 
+		self::$container = $container;
 		return self::containerInstance();
 	}
 
