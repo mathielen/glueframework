@@ -118,11 +118,13 @@ class Bootstrap
 
 			$containerBuilder->compile();
 
-			$dumper = new PhpDumper($containerBuilder);
-			$containerConfigCache->write(
-				$dumper->dump(array('class' => $containerCacheClass)),
-				$containerBuilder->getResources()
-			);
+			if (!$this->config['debug']) {
+				$dumper = new PhpDumper($containerBuilder);
+				$containerConfigCache->write(
+					$dumper->dump(array('class' => $containerCacheClass)),
+					$containerBuilder->getResources()
+				);
+			}
 		}
 
 		require_once $containerCacheFile;
