@@ -4,6 +4,7 @@ namespace Infrastructure\Persistence\Doctrine2;
 use Doctrine\Common\Collections\Collection;
 
 use Doctrine\ORM\EntityManager;
+use Infrastructure\Exception\ResourceNotFoundException;
 
 class Doctrine2Repository implements \Infrastructure\Persistence\Repository
 {
@@ -66,6 +67,10 @@ class Doctrine2Repository implements \Infrastructure\Persistence\Repository
 		}
 
 		$object = $this->get($id);
+		if (!$object) {
+		    throw new ResourceNotFoundException($this->entityName, $id);
+		}
+
 		$this->entityManager->remove($object);
 		$this->entityManager->flush();
 	}
