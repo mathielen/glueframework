@@ -40,6 +40,7 @@ class XsdValidator implements ValidatorInterface
 				$errors[] = $message;
 			}
 		}
+		libxml_clear_errors();
 
 		if(count($errors) == 0) {
 			return true;
