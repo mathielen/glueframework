@@ -59,7 +59,7 @@ class Finder implements \Infrastructure\Search\Finder
 		    $q->setMaxResults($query->limit);
 		}
 
-		if ($query->paginated) {
+		if ($query->paginated && !empty($query->limit)) {
 		    $result = new Paginator($q, true);
 		} else {
 		    $result = $q->execute();
