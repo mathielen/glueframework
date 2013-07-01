@@ -6,6 +6,7 @@ use Infrastructure\Persistence\Doctrine2\Search\DqlQuery;
 use Infrastructure\Search\Dto\Query;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class Finder implements \Infrastructure\Search\Finder
 {
@@ -50,7 +51,19 @@ class Finder implements \Infrastructure\Search\Finder
 		if (!empty($query->resultCacheId)) {
 			$q->setResultCacheId($query->resultCacheId);
 		}
-		$result = $q->execute();
+
+		if (!empty($query->offset)) {
+		    $q->setFirstResult($query->offset);
+		}
+		if (!empty($query->limit)) {
+		    $q->setMaxResults($query->limit);
+		}
+
+		if ($query->paginated) {
+		    $result = new Paginator($q, true);
+		} else {
+		    $result = $q->execute();
+		}
 
 		return $result;
 	}

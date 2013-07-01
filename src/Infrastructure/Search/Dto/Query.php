@@ -15,6 +15,7 @@ class Query
 
 	public $offset = 0;
 	public $limit = 10;
+	public $paginated = false;
 
 	public $useResultCache = true;
 	public $resultCacheId;
