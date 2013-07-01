@@ -24,13 +24,13 @@ class Finder implements \Infrastructure\Search\Finder
 	{
 		$qb = $this->doctrineEntityRepository->createQueryBuilder('table');
 
-		if ($query instanceof DqlQuery) {
-			$qb->andWhere($query->dql);
-			foreach ($query->dqldata as $key=>$data) {
-				$qb->setParameter($key, $data);
-			}
-		} elseif ($query) {
-			$i = 0;
+	    if ($query instanceof DqlQuery && !empty($query->dql)) {
+	        $dql = $qb->getDQL() . ' ' . $query->dql;
+			$q = $qb->getEntityManager()->createQuery($dql);
+			$q->setParameters($query->dqldata);
+
+		} elseif ($query && count($query->fields) > 0) {
+		    $i = 0;
 			foreach ($query->fields as $where=>$value) {
 				if (empty($value)) {
 					$qb->andWhere("table.$where IS NULL");
@@ -42,7 +42,10 @@ class Finder implements \Infrastructure\Search\Finder
 			}
 		}
 
-		$q = $qb->getQuery();
+		if (!$q) {
+		    $q = $qb->getQuery();
+		}
+
 		$q->useResultCache($query->useResultCache);
 		if (!empty($query->resultCacheId)) {
 			$q->setResultCacheId($query->resultCacheId);
