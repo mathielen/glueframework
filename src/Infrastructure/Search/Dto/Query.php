@@ -13,8 +13,8 @@ class Query
 	public $sortField;
 	public $sortDirection = self::SORT_ASCENDING; //self::SORT_ASCENDING or self::SORT_DESCENDING
 
-	public $offset = 0;
-	public $limit = 10;
+	public $offset;
+	public $limit;
 	public $paginated = false;
 
 	public $useResultCache = true;
