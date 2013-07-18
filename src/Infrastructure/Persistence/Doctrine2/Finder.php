@@ -27,10 +27,16 @@ class Finder implements \Infrastructure\Search\Finder
 
 	    if ($query instanceof DqlQuery && !empty($query->dql)) {
 	        $dql = $qb->getDQL() . ' ' . $query->dql;
+
+	        //TODO a hack! what about HAVING etc?
+	        if (!empty($query->sortField)) {
+	            $dql .= ' ORDER BY '.$query->sortField.' '.$query->sortDirection;
+	        }
+
 			$q = $qb->getEntityManager()->createQuery($dql);
 			$q->setParameters($query->dqldata);
 
-		} elseif ($query && count($query->fields) > 0) {
+	    } elseif ($query && count($query->fields) > 0) {
 		    $i = 0;
 			foreach ($query->fields as $where=>$value) {
 				if (empty($value)) {
@@ -40,6 +46,10 @@ class Finder implements \Infrastructure\Search\Finder
 					$qb->setParameter($i, $value);
 				}
 				++$i;
+			}
+
+			if (!empty($query->sortField)) {
+			    $qb->orderBy($query->sortField, $query->sortDirection);
 			}
 		}
 
