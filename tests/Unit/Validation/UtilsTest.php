@@ -38,7 +38,8 @@ class UtilsTest extends \PHPUnit_Framework_TestCase
 	{
 	    return array(
             array("2013-01-01", true),
-            array("9999-50-50", true),
+            array("2013-1-1", true),
+	        array("9999-50-50", true),
             array("2013/01/01", false),
             array("5", false),
             array(null, false),
