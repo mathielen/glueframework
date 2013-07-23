@@ -30,7 +30,8 @@ class RequestLoggerMiddleware extends Middleware
 			}
 		}
 		if ($this->logger->isHandling(Logger::DEBUG)) {
-		    $this->logger->debug('Request: '.print_r($request, true));
+		    $this->logger->debug('Body: '.print_r($request->getBody(), true));
+		    $this->logger->debug('SERVER: '.print_r($_SERVER, true));
 		}
 
 		$this->next->call();
