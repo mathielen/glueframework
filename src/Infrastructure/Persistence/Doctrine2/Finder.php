@@ -53,7 +53,7 @@ class Finder implements \Infrastructure\Search\Finder
 			}
 		}
 
-		if (!$q) {
+		if (@!$q) {
 		    $q = $qb->getQuery();
 		}
 
