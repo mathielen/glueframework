@@ -4,7 +4,7 @@ namespace Infrastructure\Messaging;
 class Status
 {
 
-	public $statusCode = 200;
-	public $statusText = 'OK';
+    public $statusCode = 200;
+    public $statusText = 'OK';
 
 }

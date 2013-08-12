@@ -1,53 +1,49 @@
 <?php
 namespace Infrastructure\Persistence\ElasticSearch;
 
-use Doctrine\Common\Collections\Collection;
-
-use Doctrine\ORM\EntityManager;
-
 class BatchSaver
 {
 
-	/**
-	 * @var \Elastica_Type
-	 */
-	private $elasticaType;
+    /**
+     * @var \Elastica_Type
+     */
+    private $elasticaType;
 
-	private $chunkSize;
+    private $chunkSize;
 
-	public function __construct(\Elastica_Type $elasticaType, $chunkSize = 500)
-	{
-		$this->elasticaType = $elasticaType;
-		$this->chunkSize = $chunkSize;
-	}
+    public function __construct(\Elastica_Type $elasticaType, $chunkSize = 500)
+    {
+        $this->elasticaType = $elasticaType;
+        $this->chunkSize = $chunkSize;
+    }
 
-	public function save(\Traversable $list)
-	{
-		$this->chunkBegin();
+    public function save(\Traversable $list)
+    {
+        $this->chunkBegin();
 
-		$i = 0;
-		foreach ($list as $object) {
-			$document = $object; //TODO transform??
+        $i = 0;
+        foreach ($list as $object) {
+            $document = $object; //TODO transform??
 
-			$this->elasticaType->addDocument($document);
-			++$i;
+            $this->elasticaType->addDocument($document);
+            ++$i;
 
-			if ($i % $this->chunkSize == 0) {
-				$this->chunkComplete();
-				$this->chunkBegin();
-			}
-		}
+            if ($i % $this->chunkSize == 0) {
+                $this->chunkComplete();
+                $this->chunkBegin();
+            }
+        }
 
-		$this->chunkComplete();
-	}
+        $this->chunkComplete();
+    }
 
-	private function chunkBegin()
-	{
-	}
+    private function chunkBegin()
+    {
+    }
 
-	private function chunkComplete()
-	{
-		$this->elasticaType->getIndex()->refresh();
-	}
+    private function chunkComplete()
+    {
+        $this->elasticaType->getIndex()->refresh();
+    }
 
 }

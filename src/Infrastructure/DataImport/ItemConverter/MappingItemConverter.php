@@ -11,7 +11,7 @@ use Ddeboer\DataImport\ItemConverter\ItemConverterInterface;
 class MappingItemConverter implements ItemConverterInterface
 {
 
-	private $fieldMapping;
+    private $fieldMapping;
 
     /**
      * Constructor
@@ -28,11 +28,11 @@ class MappingItemConverter implements ItemConverterInterface
      */
     public function convert(array $input)
     {
-    	$output = array();
+        $output = array();
 
-    	foreach ($this->fieldMapping as $from=>$to) {
-    		$output[$to] = $input[$from];
-    	}
+        foreach ($this->fieldMapping as $from=>$to) {
+            $output[$to] = $input[$from];
+        }
 
         return $output;
     }

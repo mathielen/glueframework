@@ -4,6 +4,6 @@ namespace Infrastructure\Persistence;
 interface Factory
 {
 
-	public function factor($data = null);
+    public function factor($data = null);
 
 }

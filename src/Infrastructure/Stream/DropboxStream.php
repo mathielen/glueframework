@@ -49,8 +49,8 @@ class DropboxStream
     /**
      * Enter description here...
      *
-     * @param string $path
-     * @param int $options
+     * @param  string $path
+     * @param  int    $options
      * @return bool
      */
     public function dir_opendir($path , $options)
@@ -81,9 +81,9 @@ class DropboxStream
     /**
      * Enter description here...
      *
-     * @param string $path
-     * @param int $mode
-     * @param int $options
+     * @param  string $path
+     * @param  int    $mode
+     * @param  int    $options
      * @return bool
      */
     public function mkdir($path , $mode , $options)
@@ -94,8 +94,8 @@ class DropboxStream
     /**
      * Enter description here...
      *
-     * @param string $path_from
-     * @param string $path_to
+     * @param  string $path_from
+     * @param  string $path_to
      * @return bool
      */
     public function rename($path_from , $path_to)
@@ -106,8 +106,8 @@ class DropboxStream
     /**
      * Enter description here...
      *
-     * @param string $path
-     * @param int $options
+     * @param  string $path
+     * @param  int    $options
      * @return bool
      */
     public function rmdir($path , $options)
@@ -118,7 +118,7 @@ class DropboxStream
     /**
      * Enter description here...
      *
-     * @param int $cast_as
+     * @param  int      $cast_as
      * @return resource
      */
     public function stream_cast($cast_as)
@@ -144,6 +144,7 @@ class DropboxStream
     {
         // we only need to do one read
         $this->done = true;
+
         return true;
     }
 
@@ -154,22 +155,23 @@ class DropboxStream
      */
     public function stream_flush()
     {
-    	if (!empty($this->buffer)) {
-	        if ($this->dbox->putFile($this->file, null, null, $this->buffer)) {
-	        	$this->buffer = '';
-	            return true;
-	        } else {
-	        	return false;
-	        }
-    	} else {
-    		return true;
-    	}
+        if (!empty($this->buffer)) {
+            if ($this->dbox->putFile($this->file, null, null, $this->buffer)) {
+                $this->buffer = '';
+
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return true;
+        }
     }
 
     /**
      * Enter description here...
      *
-     * @param mode $operation
+     * @param  mode $operation
      * @return bool
      */
     public function stream_lock($operation)
@@ -177,7 +179,7 @@ class DropboxStream
 
     }
 
-    function initDropbox($path)
+    public function initDropbox($path)
     {
         $this->full_path = $path;
         $url_data = parse_url($path);
@@ -188,7 +190,7 @@ class DropboxStream
 
         parse_str($url_data['query'], $query);
         if (!$query) {
-        	return false;
+            return false;
         }
 
         $this->oauth = new \Dropbox_OAuth_PHP($query['key'], $query['secret']);
@@ -200,15 +202,16 @@ class DropboxStream
     /**
      * Enter description here...
      *
-     * @param string $path
-     * @param string $mode
-     * @param int $options
-     * @param string &$opened_path
+     * @param  string $path
+     * @param  string $mode
+     * @param  int    $options
+     * @param  string &$opened_path
      * @return bool
      */
     public function stream_open($path , $mode , $options , &$opened_path)
     {
         $this->initDropbox($path);
+
         return true;
     }
 
@@ -217,11 +220,10 @@ class DropboxStream
         return array('token'=>$this->oauth->oauth_token, 'token_secret'=>$this->oauth->oauth_token_secret);
     }
 
-
     /**
      * Enter description here...
      *
-     * @param int $count
+     * @param  int    $count
      * @return string
      */
     public function stream_read($count)
@@ -234,7 +236,7 @@ class DropboxStream
         $this->outputBufferPosition += strlen($results);
 
         if ($this->outputBufferPosition >= strlen($this->outputBuffer)) {
-        	$this->outputBuffer = null;
+            $this->outputBuffer = null;
         }
 
         return $results;
@@ -243,8 +245,8 @@ class DropboxStream
     /**
      * Enter description here...
      *
-     * @param int $offset
-     * @param int $whence = SEEK_SET
+     * @param  int  $offset
+     * @param  int  $whence = SEEK_SET
      * @return bool
      */
     public function stream_seek($offset , $whence = SEEK_SET)
@@ -255,9 +257,9 @@ class DropboxStream
     /**
      * Enter description here...
      *
-     * @param int $option
-     * @param int $arg1
-     * @param int $arg2
+     * @param  int  $option
+     * @param  int  $arg1
+     * @param  int  $arg2
      * @return bool
      */
     public function stream_set_option($option , $arg1 , $arg2)
@@ -288,13 +290,14 @@ class DropboxStream
     /**
      * Enter description here...
      *
-     * @param string $data
+     * @param  string $data
      * @return int
      */
     public function stream_write($data)
     {
         $test = strlen($data);
         $this->buffer .= $data;
+
         return $test;
 
     }
@@ -302,7 +305,7 @@ class DropboxStream
     /**
      * Enter description here...
      *
-     * @param string $path
+     * @param  string $path
      * @return bool
      */
     public function unlink($path)
@@ -313,8 +316,8 @@ class DropboxStream
     /**
      * Enter description here...
      *
-     * @param string $path
-     * @param int $flags
+     * @param  string $path
+     * @param  int    $flags
      * @return array
      */
     public function url_stat($path , $flags)
@@ -325,14 +328,11 @@ class DropboxStream
             $results = $this->dbox->getMetaData($this->file);
 
             $e = array('size'=> $results['size'],'mtime'=> strtotime($results['modified']), 'atime' => time() );
+
             return $e;
-        }
-        catch (\Dropbox_Exception $e) {
+        } catch (\Dropbox_Exception $e) {
             return false;
         }
 
     }
 }
-
-
-?>

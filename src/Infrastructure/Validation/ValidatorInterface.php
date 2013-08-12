@@ -4,6 +4,6 @@ namespace Infrastructure\Validation;
 interface ValidatorInterface
 {
 
-	public function validate($input);
+    public function validate($input);
 
 }

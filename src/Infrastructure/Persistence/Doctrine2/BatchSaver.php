@@ -1,53 +1,51 @@
 <?php
 namespace Infrastructure\Persistence\Doctrine2;
 
-use Doctrine\Common\Collections\Collection;
-
 use Doctrine\ORM\EntityManager;
 
 class BatchSaver
 {
 
-	/**
-	 * @var EntityManager
-	 */
-	private $entityManager;
+    /**
+     * @var EntityManager
+     */
+    private $entityManager;
 
-	private $chunkSize;
+    private $chunkSize;
 
-	public function __construct(EntityManager $entityManager, $chunkSize = 500)
-	{
-		$this->entityManager = $entityManager;
-		$this->chunkSize = $chunkSize;
-	}
+    public function __construct(EntityManager $entityManager, $chunkSize = 500)
+    {
+        $this->entityManager = $entityManager;
+        $this->chunkSize = $chunkSize;
+    }
 
-	public function save(\Traversable $list)
-	{
-		$this->chunkBegin();
+    public function save(\Traversable $list)
+    {
+        $this->chunkBegin();
 
-		$i = 0;
-		foreach ($list as $object) {
-			$this->entityManager->persist($object);
-			++$i;
+        $i = 0;
+        foreach ($list as $object) {
+            $this->entityManager->persist($object);
+            ++$i;
 
-			if ($i % $this->chunkSize == 0) {
-				$this->chunkComplete();
-				$this->chunkBegin();
-			}
-		}
+            if ($i % $this->chunkSize == 0) {
+                $this->chunkComplete();
+                $this->chunkBegin();
+            }
+        }
 
-		$this->chunkComplete();
-	}
+        $this->chunkComplete();
+    }
 
-	private function chunkBegin()
-	{
-		$this->entityManager->beginTransaction();
-	}
+    private function chunkBegin()
+    {
+        $this->entityManager->beginTransaction();
+    }
 
-	private function chunkComplete()
-	{
-		$this->entityManager->flush();
-		$this->entityManager->commit();
-	}
+    private function chunkComplete()
+    {
+        $this->entityManager->flush();
+        $this->entityManager->commit();
+    }
 
 }

@@ -7,7 +7,7 @@ class Utils
     /**
      * returns true if valid mysql date (Y-m-d)
      *
-     * @param unknown $subject
+     * @param  unknown $subject
      * @return number
      */
     public static function isMysqlDate($subject)
@@ -18,7 +18,7 @@ class Utils
     /**
      * returns true if integer (as string or as real int type)
      *
-     * @param unknown $input
+     * @param  unknown $input
      * @return boolean
      */
     public static function isInteger($input)

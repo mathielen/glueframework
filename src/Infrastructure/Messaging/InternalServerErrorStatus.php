@@ -4,12 +4,13 @@ namespace Infrastructure\Messaging;
 class InternalServerErrorStatus
 {
 
-	public $statusCode = 500;
-	public $statusText = 'Internal Server Error';
-	public $reason;
+    public $statusCode = 500;
+    public $statusText = 'Internal Server Error';
+    public $reason;
 
-	public function __construct($reason) {
-		$this->reason = $reason;
-	}
+    public function __construct($reason)
+    {
+        $this->reason = $reason;
+    }
 
 }

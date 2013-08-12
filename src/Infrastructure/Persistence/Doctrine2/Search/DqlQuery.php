@@ -6,13 +6,13 @@ use Infrastructure\Search\Dto\Query;
 class DqlQuery extends Query
 {
 
-	public $dql;
-	public $dqldata;
+    public $dql;
+    public $dqldata;
 
-	public function __construct($dql, $dqldata)
-	{
-		$this->dql = $dql;
-		$this->dqldata = $dqldata;
-	}
+    public function __construct($dql, $dqldata)
+    {
+        $this->dql = $dql;
+        $this->dqldata = $dqldata;
+    }
 
 }

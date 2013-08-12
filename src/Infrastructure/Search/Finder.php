@@ -6,6 +6,6 @@ use Infrastructure\Search\Dto\Query;
 interface Finder
 {
 
-	public function search(Query $query = null);
+    public function search(Query $query = null);
 
 }

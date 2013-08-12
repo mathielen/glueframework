@@ -4,74 +4,77 @@ namespace Infrastructure\Serialization\Serializer;
 class JsonSerializer implements SerializerInterface
 {
 
-	public function getHttpContentType()
-	{
-		return 'application/json';
-	}
+    public function getHttpContentType()
+    {
+        return 'application/json';
+    }
 
-	public function serialize($value)
-	{
-		if (empty($value)) {
-			return null;
-		}
-		$this->decorateCls($value);
-		@$json = json_encode($value);
+    public function serialize($value)
+    {
+        if (empty($value)) {
+            return null;
+        }
+        $this->decorateCls($value);
+        @$json = json_encode($value);
 
-		return $json;
-	}
+        return $json;
+    }
 
-	private function decorateCls($object)
-	{
-		if (is_array($object)) {
-			foreach ($object as &$obj) {
-				$this->decorateCls($obj);
-			}
-			return;
-		} elseif (!is_object($object)) {
-			return;
-		}
+    private function decorateCls($object)
+    {
+        if (is_array($object)) {
+            foreach ($object as &$obj) {
+                $this->decorateCls($obj);
+            }
 
-		foreach ($object as &$value) {
-			$this->decorateCls($value);
-		}
+            return;
+        } elseif (!is_object($object)) {
+            return;
+        }
 
-		$object->cls = get_class($object);
-	}
+        foreach ($object as &$value) {
+            $this->decorateCls($value);
+        }
 
-	public function unserialize($value)
-	{
-		if (empty($value)) {
-			return null;
-		}
-		$object = json_decode($value);
+        $object->cls = get_class($object);
+    }
 
-		if ($object === null) {
-			throw new SerializationException($value. ' could not be decoded!');
-		}
+    public function unserialize($value)
+    {
+        if (empty($value)) {
+            return null;
+        }
+        $object = json_decode($value);
 
-		$this->castRecursiveToObject($object);
-		return $object;
-	}
+        if ($object === null) {
+            throw new SerializationException($value. ' could not be decoded!');
+        }
 
-	private function castRecursiveToObject(&$object)
-	{
-		if (is_array($object)) {
-			foreach ($object as &$obj) {
-				$this->castRecursiveToObject($obj);
-			}
-			return;
-		} elseif (!is_object($object) || !isset($object->cls)) {
-			return;
-		}
+        $this->castRecursiveToObject($object);
 
-		foreach ($object as &$value) {
-			$this->castRecursiveToObject($value);
-		}
+        return $object;
+    }
 
-	 	$className = $object->cls;
-		unset($object->cls);
+    private function castRecursiveToObject(&$object)
+    {
+        if (is_array($object)) {
+            foreach ($object as &$obj) {
+                $this->castRecursiveToObject($obj);
+            }
 
-		$object = Utils::recursiveCastToObject($object, $className);
-	}
+            return;
+        } elseif (!is_object($object) || !isset($object->cls)) {
+            return;
+        }
+
+        foreach ($object as &$value) {
+            $this->castRecursiveToObject($value);
+        }
+
+         $className = $object->cls;
+        unset($object->cls);
+
+        $object = Utils::recursiveCastToObject($object, $className);
+    }
 
 }

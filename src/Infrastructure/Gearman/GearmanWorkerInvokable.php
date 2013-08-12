@@ -4,6 +4,6 @@ namespace Infrastructure\Gearman;
 interface GearmanWorkerInvokable
 {
 
-	public function invokeByGearmanWorker($name, $workload);
+    public function invokeByGearmanWorker($name, $workload);
 
 }
