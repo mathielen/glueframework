@@ -9,7 +9,7 @@ class ValidationException extends \Exception
     {
         $messages = array();
         foreach ($validationErrors as $error) {
-            $messages[] = $error->getMessage();
+            $messages[] = $error.'';
         }
 
         return new self(join("\n", $messages));
