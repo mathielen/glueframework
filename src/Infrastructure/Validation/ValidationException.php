@@ -12,7 +12,7 @@ class ValidationException extends \Exception
     {
         $messages = array();
         foreach ($validationErrors as $error) {
-            $messages[$error->getCode()] = $error.'';
+            $messages[$error->getPropertyPath()] = 'INVALID'; //TODO how to differenciate?
         }
 
         return new self(serialize($messages)); //TODO how to transport the messages stack to flattenexception? see exceptioncontroller
