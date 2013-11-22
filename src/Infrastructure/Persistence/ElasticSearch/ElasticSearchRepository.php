@@ -5,7 +5,7 @@ class ElasticSearchRepository implements \Infrastructure\Persistence\Repository
 {
 
     /**
-     * @var \Elastica_Type
+     * @var \Elastica\Type
      */
     private $elasticaType;
 
@@ -15,7 +15,7 @@ class ElasticSearchRepository implements \Infrastructure\Persistence\Repository
     private $documentFactory;
 
     public function __construct(
-        \Elastica_Type $elasticaType,
+        \Elastica\Type $elasticaType,
         DocumentFactory $documentFactory)
     {
         $this->elasticaType = $elasticaType;

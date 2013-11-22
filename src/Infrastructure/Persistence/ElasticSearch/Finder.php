@@ -7,38 +7,45 @@ class Finder implements \Infrastructure\Search\Finder
 {
 
     /**
-     * @var \Elastica_Search
+     * @var Elastica\Search
      */
     private $elasticSearch;
 
-    public function __construct(\Elastica_Search $elasticSearch)
+    public function __construct(\Elastica\Search $elasticSearch)
     {
         $this->elasticSearch = $elasticSearch;
     }
 
     public function search(Query $query = null)
     {
-        $esQuery = new Elastica_Query();
+        $esQuery = new \Elastica\Query();
 
         if ($query) {
-            if ($query->fields) {
-                $esQuery->setFields($query->fields);
-            }
+        	$elasticaQuery  = new \Elastica\Query\Bool();
+        	
+        	foreach ($query->fields as $key=>$value) {
+        		$elasticaQuery->addMust($termQuery1 = new \Elastica\Query\Term(array($key => $value)));
+        	}
+        	
             $esQuery->setLimit($query->limit);
+            $esQuery->setQuery($elasticaQuery);
         }
 
         return $this->searchRaw($esQuery);
     }
 
-    private function searchRaw(Elastica_Query $esQuery)
+    private function searchRaw(\Elastica\Query $esQuery)
     {
         $esResult = $this->elasticSearch->search($esQuery);
         $esResultsets = $esResult->getResults();
         $result = array();
 
-        /* @var $esResultset Elastica_Result  */
+        /* @var $esResultset Elastica\Result  */
         foreach ($esResultsets as $esResultset) {
-            $result[] = $esResultset->getData();
+        	$resultSet = $esResultset->getData();
+        	$resultSet['id'] = $esResultset->getId();
+        	
+            $result[] = $resultSet;
         }
 
         return $result;
