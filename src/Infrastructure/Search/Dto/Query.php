@@ -19,6 +19,7 @@ class Query
 
     public $useResultCache = true;
     public $resultCacheId;
+    public $facets;
 
     public function __construct($fields = array())
     {
