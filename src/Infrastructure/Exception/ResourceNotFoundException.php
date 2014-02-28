@@ -1,7 +1,9 @@
 <?php
 namespace Infrastructure\Exception;
 
-class ResourceNotFoundException extends \Exception
+use Infrastructure\Search\NotFoundException;
+
+class ResourceNotFoundException extends NotFoundException
 {
 
     public function __construct($resourceName, $identifier)

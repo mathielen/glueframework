@@ -21,9 +21,10 @@ class Query
     public $resultCacheId;
     public $facets;
 
-    public function __construct($fields = array())
+    public function __construct($fields = array(), $limit=null)
     {
         $this->fields = $fields;
+        $this->limit = $limit;
     }
 
     public function __wakeup()

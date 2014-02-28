@@ -45,7 +45,8 @@ class Finder implements \Infrastructure\Search\Finder
 			        $facet = new Terms($name);
 			        $facet->setAllTerms(true);
 			        $facet->setField($field);
-			        $facet->setOrder('term');
+			       // $facet->setOrder('order');
+			        $facet->setSize(20);
 			        $esQuery->addFacet($facet);
 	        	}
 	        }

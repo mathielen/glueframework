@@ -57,7 +57,7 @@ class ElasticSearchRepository implements \Infrastructure\Persistence\Repository
 
         try {
             $document = $this->elasticaType->getDocument($id);
-        } catch (\Elastica_Exception_NotFound $e) {
+        } catch (\Elastica\Exception\NotFoundException $e) {
             return null;
         }
 

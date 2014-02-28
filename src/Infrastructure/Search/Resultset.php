@@ -1,16 +1,16 @@
 <?php
 namespace Infrastructure\Search;
 
-class Resultset
+class Resultset implements \IteratorAggregate, \Countable
 {
 
 	private $data;
-	private $metadata;
+	private $metadata = array();
 
-	public function __construct()
+	public function __construct($data = array())
 	{
-		$this->data = array();
-		$this->metadata = array();
+		$this->data = $data;
+		$this->setMetadata('count', $this->count());
 	}
 
 	public function setMetadata($class, $value)
@@ -35,5 +35,15 @@ class Resultset
 
 		$this->data[] = $object;
 	}
+
+    public function getIterator()
+    {
+        return new \ArrayIterator($this->data);
+    }
+
+    public function count()
+    {
+        return count($this->data);
+    }
 
 }
