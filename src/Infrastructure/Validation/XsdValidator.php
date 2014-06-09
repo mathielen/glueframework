@@ -1,8 +1,6 @@
 <?php
 namespace Infrastructure\Validation;
 
-use Infrastructure\Validation\ValidationException;
-
 class XsdValidator implements ValidatorInterface
 {
 

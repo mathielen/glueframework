@@ -27,23 +27,23 @@ class IndexFactory
             $this->createIndex($elasticaType);
         }
     }
-    
+
     public function reset()
     {
-    	foreach ($this->elasticaTypes as $elasticaType) {
-    		$this->recreateIndex($elasticaType);
-    	}    	
+        foreach ($this->elasticaTypes as $elasticaType) {
+            $this->recreateIndex($elasticaType);
+        }
     }
-    
+
     public function recreateIndex(\Elastica\Type $elasticaType)
     {
         $this->createIndex($elasticaType, true);
     }
-    
+
     public function createIndex(\Elastica\Type $elasticaType, $recreate=false)
     {
         if ($recreate || !$elasticaType->getIndex()->exists()) {
-        	$createIndexResult = $elasticaType->getIndex()->create(
+            $createIndexResult = $elasticaType->getIndex()->create(
                 array(
                         'number_of_shards' => 4,
                         'number_of_replicas' => 1,
@@ -65,8 +65,8 @@ class IndexFactory
                                 )
                         )
                 ),
-			$recreate
-        	);
+            $recreate
+            );
         }
 
         //set mapping if given

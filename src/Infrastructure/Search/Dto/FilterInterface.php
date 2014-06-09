@@ -1,8 +1,6 @@
 <?php
 namespace Infrastructure\Search\Dto;
 
-use Infrastructure\Search\Dto\Query;
-
 interface FilterInterface
 {
 

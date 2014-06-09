@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="glueframework" default="test">
+
+	<!-- Define build properties -->
+	<property name="console" value="app/console" />
+	<property name="composer" value="composer.phar" />
+	<property name="git" value="git" />
+
+	<!-- testing -->
+	<target name="cs-fix">
+        <echo>Fixing codestyle to symfony2 default</echo>
+		<exec command='php-cs-fixer fix src' passthru="true" />
+		<exec command='php-cs-fixer fix tests' passthru="true" />
+	</target>
+
+	<target name="phpunit">
+        <echo>Testing FAST: Unit and Integration tests</echo>
+		<exec command='phpunit --testsuite Fast' passthru="true" checkreturn="true" />
+
+		<echo>Testing DETAILED: Functional tests</echo>
+        <exec command='phpunit --testsuite Functional' passthru="true" checkreturn="true" />
+	</target>
+
+	<!-- Main Targets -->
+	<target name="test" depends="cs-fix,phpunit" />
+
+</project>

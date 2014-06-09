@@ -11,7 +11,7 @@ use Doctrine\Common\Cache\ArrayCache;
 
 use Doctrine\ORM\Tools\Setup;
 
-class RepositoryTest extends \PHPUnit_Framework_TestCase
+class BatchSaverTest extends \PHPUnit_Framework_TestCase
 {
 
     public function test()

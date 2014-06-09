@@ -53,7 +53,7 @@ class GearmanWorker
     {
         $logger = $this->logger;
 
-        return $this->gearmanWorker->addFunction($functionName, function() use ($task, $logger) {
+        return $this->gearmanWorker->addFunction($functionName, function () use ($task, $logger) {
             try {
                 $args = func_get_args();
                 $gearmanJob = $args[0];

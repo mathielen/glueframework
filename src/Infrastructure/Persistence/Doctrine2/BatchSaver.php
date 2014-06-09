@@ -21,20 +21,20 @@ class BatchSaver
 
     public function save(\Traversable $list)
     {
-		$this->process($list);
+        $this->process($list);
     }
 
     public function replace(\Traversable $list)
     {
-    	$this->process($list, true);
+        $this->process($list, true);
     }
 
     private function process(\Traversable $list, $replace=false)
     {
-    	if ($replace) {
-    		$q = $this->entityManager->createQuery('delete from '.get_class($list[0]));
-			$q->execute();
-    	}
+        if ($replace) {
+            $q = $this->entityManager->createQuery('delete from '.get_class($list[0]));
+            $q->execute();
+        }
 
         $this->chunkBegin();
 

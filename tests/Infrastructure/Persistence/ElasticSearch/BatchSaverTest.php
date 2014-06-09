@@ -5,7 +5,7 @@ use Infrastructure\Persistence\TestModel;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
-class RepositoryTest extends \PHPUnit_Framework_TestCase
+class BatchSaverTest extends \PHPUnit_Framework_TestCase
 {
 
     public function test()

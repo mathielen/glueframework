@@ -20,42 +20,42 @@ class BatchSaver
 
     public function save(\Traversable $list)
     {
-		$this->process($list);
+        $this->process($list);
     }
 
     public function replace(\Traversable $list)
     {
-    	$this->process($list, true);
+        $this->process($list, true);
     }
 
     private function process(\Traversable $list, $replace=false)
     {
-    	$this->chunkBegin();
+        $this->chunkBegin();
 
-    	$i = 0;
-    	foreach ($list as $object) {
-    		$document = $object; //TODO transform??
+        $i = 0;
+        foreach ($list as $object) {
+            $document = $object; //TODO transform??
 
-    		try {
-    			if ($replace) {
-    				try {
-    					$this->elasticaType->deleteDocument($document);
-    				} catch (NotFoundException $e) {}
-    			}
+            try {
+                if ($replace) {
+                    try {
+                        $this->elasticaType->deleteDocument($document);
+                    } catch (NotFoundException $e) {}
+                }
 
-    			$this->elasticaType->addDocument($document);
-    		} catch (\Exception $e) {
-    			throw new \Exception('Error in batch saving with document: '.print_r($document, true), 0, $e);
-    		}
-    		++$i;
+                $this->elasticaType->addDocument($document);
+            } catch (\Exception $e) {
+                throw new \Exception('Error in batch saving with document: '.print_r($document, true), 0, $e);
+            }
+            ++$i;
 
-    		if ($i % $this->chunkSize == 0) {
-    			$this->chunkComplete();
-    			$this->chunkBegin();
-    		}
-    	}
+            if ($i % $this->chunkSize == 0) {
+                $this->chunkComplete();
+                $this->chunkBegin();
+            }
+        }
 
-    	$this->chunkComplete();
+        $this->chunkComplete();
     }
 
     private function chunkBegin()

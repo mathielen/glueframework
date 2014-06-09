@@ -31,10 +31,10 @@ class FinderUserProvider implements UserProviderInterface
     public function loadUserByUsername($username)
     {
         $query = new Query(array('username' => $username));
-        $user = $this->userFinder->search($query);
+        $users = $this->userFinder->search($query);
 
-        if (count($user) > 0) {
-            return $user[0];
+        if (count($users) > 0) {
+            return $users[0];
         } else {
             throw new UsernameNotFoundException("User $username could not be found!");
         }

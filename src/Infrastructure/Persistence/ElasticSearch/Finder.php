@@ -26,30 +26,30 @@ class Finder implements \Infrastructure\Search\Finder
         $esQuery->setLimit($query->limit);
 
         if ($query) {
-	        if (!empty($query->fields)) {
-	        	$elasticaQuery  = new \Elastica\Query\Bool();
+            if (!empty($query->fields)) {
+                $elasticaQuery  = new \Elastica\Query\Bool();
 
-	        	foreach ($query->fields as $key=>$value) {
-	        		if (is_array($value)) {
-	        			$elasticaQuery->addMust($termQuery1 = new \Elastica\Query\Terms($key, $value));
-	        		} else {
-	        			$elasticaQuery->addMust($termQuery1 = new Term(array($key => $value)));
-	        		}
-	        	}
+                foreach ($query->fields as $key=>$value) {
+                    if (is_array($value)) {
+                        $elasticaQuery->addMust($termQuery1 = new \Elastica\Query\Terms($key, $value));
+                    } else {
+                        $elasticaQuery->addMust($termQuery1 = new Term(array($key => $value)));
+                    }
+                }
 
-	            $esQuery->setQuery($elasticaQuery);
-	        }
+                $esQuery->setQuery($elasticaQuery);
+            }
 
-	        if ($query->facets) {
-	        	foreach ($query->facets as $name=>$field) {
-			        $facet = new Terms($name);
-			        $facet->setAllTerms(true);
-			        $facet->setField($field);
-			       // $facet->setOrder('order');
-			        $facet->setSize(20);
-			        $esQuery->addFacet($facet);
-	        	}
-	        }
+            if ($query->facets) {
+                foreach ($query->facets as $name=>$field) {
+                    $facet = new Terms($name);
+                    $facet->setAllTerms(true);
+                    $facet->setField($field);
+                   // $facet->setOrder('order');
+                    $facet->setSize(20);
+                    $esQuery->addFacet($facet);
+                }
+            }
         }
 
         return $this->searchRaw($esQuery);
@@ -63,8 +63,8 @@ class Finder implements \Infrastructure\Search\Finder
 
         /* @var $esResultset \Elastica\Result  */
         foreach ($esResultsets as $esResultset) {
-        	$data = $esResultset->getData();
-        	$data['id'] = $esResultset->getId();
+            $data = $esResultset->getData();
+            $data['id'] = $esResultset->getId();
 
             $resultset->add($data);
         }

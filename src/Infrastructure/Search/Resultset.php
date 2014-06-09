@@ -4,37 +4,37 @@ namespace Infrastructure\Search;
 class Resultset implements \IteratorAggregate, \Countable
 {
 
-	private $data;
-	private $metadata = array();
+    private $data;
+    private $metadata = array();
 
-	public function __construct($data = array())
-	{
-		$this->data = $data;
-		$this->setMetadata('count', $this->count());
-	}
+    public function __construct($data = array())
+    {
+        $this->data = $data;
+        $this->setMetadata('count', $this->count());
+    }
 
-	public function setMetadata($class, $value)
-	{
-		if (empty($value)) {
-			return;
-		}
+    public function setMetadata($class, $value)
+    {
+        if (empty($value)) {
+            return;
+        }
 
-		$this->metadata[$class] = $value;
-	}
+        $this->metadata[$class] = $value;
+    }
 
-	public function getMetadata($class)
-	{
-		return $this->metadata[$class];
-	}
+    public function getMetadata($class)
+    {
+        return $this->metadata[$class];
+    }
 
-	public function add($object)
-	{
-		if (empty($object)) {
-			return;
-		}
+    public function add($object)
+    {
+        if (empty($object)) {
+            return;
+        }
 
-		$this->data[] = $object;
-	}
+        $this->data[] = $object;
+    }
 
     public function getIterator()
     {

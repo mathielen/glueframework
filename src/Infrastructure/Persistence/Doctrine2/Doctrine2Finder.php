@@ -8,7 +8,7 @@ use Infrastructure\Search\Dto\Query;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
-class Finder implements \Infrastructure\Search\Finder
+class Doctrine2Finder implements \Infrastructure\Search\Finder
 {
 
     /**
