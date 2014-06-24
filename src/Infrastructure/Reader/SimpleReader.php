@@ -4,6 +4,7 @@ namespace Infrastructure\Reader;
 use Infrastructure\Search\Dto\FilterInterface;
 use Infrastructure\Search\Finder;
 use Infrastructure\Search\Dto\Query;
+
 class SimpleReader
 {
 
