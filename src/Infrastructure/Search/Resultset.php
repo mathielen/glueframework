@@ -13,9 +13,10 @@ class Resultset implements \IteratorAggregate, \Countable
         $this->setMetadata('count', $this->count());
     }
 
-    public function setMetadata($class, $value)
+    public function setMetadata($class, $value=null)
     {
-        if (empty($value)) {
+        if (is_null($value)) {
+            $this->metadata = $class;
             return;
         }
 
