@@ -52,7 +52,7 @@ class MongoDBFinder implements \Infrastructure\Search\Finder
             $result = $q->execute();
         }
 
-        return array_values($result->toArray()); //TODO unified result?
+        return array_values($result->toArray()); //TODO unified result class?
     }
 
 }
