@@ -44,6 +44,9 @@ class MongoDBFinder implements \Infrastructure\Search\Finder
         if (!empty($query->limit)) {
             $qb->limit($query->limit);
         }
+        if ($query->sortField) {
+            $qb->sort($query->sortField, $query->sortDirection);
+        }
 
         $q = $qb->getQuery();
         if ($query->paginated && !empty($query->limit)) {

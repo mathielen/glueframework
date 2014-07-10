@@ -38,7 +38,7 @@ class MongoDBRepository implements \Infrastructure\Persistence\Repository
     public function save($object)
     {
         $this->documentManager->persist($object);
-        $this->documentManager->flush($object);
+        $this->documentManager->flush(); //flush everything pending (so cascaded objects get flushed, too)
     }
 
     /**

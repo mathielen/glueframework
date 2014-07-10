@@ -13,12 +13,20 @@ class BatchSaver
 
     private $chunkSize;
 
+    private $progressListener;
+
     public function __construct(
         DocumentManager $documentManager,
         $chunkSize = 500)
     {
         $this->documentManager = $documentManager;
         $this->chunkSize = $chunkSize;
+
+    }
+
+    public function setProgressListener(callable $progressListener = null)
+    {
+        $this->progressListener = $progressListener;
     }
 
     public function save(\Traversable $list)
@@ -51,21 +59,26 @@ class BatchSaver
             ++$i;
 
             if ($i % $this->chunkSize == 0) {
-                $this->chunkComplete();
+                $this->chunkComplete($i);
                 $this->chunkBegin();
             }
         }
 
-        $this->chunkComplete();
+        $this->chunkComplete($i);
     }
 
     private function chunkBegin()
     {
     }
 
-    private function chunkComplete()
+    private function chunkComplete($i)
     {
         $this->documentManager->flush();
+        $this->documentManager->clear();
+
+        if ($this->progressListener) {
+            call_user_func($this->progressListener, $i);
+        }
     }
 
 }

@@ -61,6 +61,7 @@ class BatchSaver
     {
         $this->entityManager->flush();
         $this->entityManager->commit();
+        $this->entityManager->clear();
     }
 
 }

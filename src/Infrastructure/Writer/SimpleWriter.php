@@ -14,14 +14,34 @@ class SimpleWriter
      */
     protected $repository;
 
-    public function __construct(Repository $repository)
+    protected $entityClass;
+
+    public function __construct(
+        Repository $repository,
+        $entityClass)
     {
         $this->repository = $repository;
+        $this->entityClass = $entityClass;
     }
 
-    public function save($object)
+    public function create(array $data)
     {
-        $this->repository->save($object);
+        $entityClass = $this->entityClass;
+        $entity = new $entityClass($data);
+
+        return $this->persist($entity);
+    }
+
+    public function save($entity)
+    {
+        return $this->persist($entity);
+    }
+
+    private function persist($entity)
+    {
+        $this->repository->save($entity);
+
+        return $entity;
     }
 
     public function delete($id)
