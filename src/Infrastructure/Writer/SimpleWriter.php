@@ -24,20 +24,30 @@ class SimpleWriter
         $this->entityClass = $entityClass;
     }
 
-    public function create(array $data)
+    protected function translate(&$data)
     {
+    }
+
+    public function create($data)
+    {
+        $this->translate($data);
+
         $entityClass = $this->entityClass;
         $entity = new $entityClass($data);
 
         return $this->persist($entity);
     }
 
-    public function save($entity)
+    public function save($entity, $data=array())
     {
+        $this->translate($data);
+
+        $entity->applyData($data);
+
         return $this->persist($entity);
     }
 
-    private function persist($entity)
+    protected function persist($entity)
     {
         $this->repository->save($entity);
 

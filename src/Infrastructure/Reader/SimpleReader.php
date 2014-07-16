@@ -18,6 +18,11 @@ class SimpleReader
         $this->finder = $finder;
     }
 
+    public function getAll()
+    {
+        return $this->finder->search();
+    }
+
     public function get($id)
     {
         $queryParams = array('id' => $id);
