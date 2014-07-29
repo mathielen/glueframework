@@ -42,7 +42,9 @@ class SimpleWriter
     {
         $this->translate($data);
 
-        $entity->applyData($data);
+        if (!empty($data)) {
+            $entity->applyData($data);
+        }
 
         return $this->persist($entity);
     }

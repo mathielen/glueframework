@@ -28,7 +28,14 @@ class MongoDBFinder implements \Infrastructure\Search\Finder
                 if (empty($value)) {
                     $qb->field($where)->exists(false);
                 } else {
-                    $qb->field($where)->equals($value);
+                    $field = $qb->field($where);
+
+                    if (is_array($value)) {
+                        $operator = $value[0];
+                        $field->$operator($value[1]);
+                    } else {
+                        $field->equals($value);
+                    }
                 }
                 ++$i;
             }

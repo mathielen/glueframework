@@ -75,6 +75,7 @@ class BatchSaver
     {
         $this->documentManager->flush();
         $this->documentManager->clear();
+        gc_collect_cycles();
 
         if ($this->progressListener) {
             call_user_func($this->progressListener, $i);
