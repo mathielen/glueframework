@@ -44,8 +44,9 @@ class BatchSaver
         $this->chunkBegin();
 
         $i = 0;
-        foreach ($list as $object) {
-            $document = $object; //TODO transform??
+        $size = count($list);
+        for($i;$i<$size;$i++) {
+            $document = $list[$i]; //TODO transform??
 
             try {
                 if ($replace) {
@@ -56,12 +57,13 @@ class BatchSaver
             } catch (\Exception $e) {
                 throw new \Exception('Error in batch saving with document: '.print_r($document, true), 0, $e);
             }
-            ++$i;
 
             if ($i % $this->chunkSize == 0) {
                 $this->chunkComplete($i);
                 $this->chunkBegin();
             }
+
+            $list[$i] = null;
         }
 
         $this->chunkComplete($i);
