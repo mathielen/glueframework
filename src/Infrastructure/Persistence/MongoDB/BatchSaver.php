@@ -76,7 +76,7 @@ class BatchSaver
     private function chunkComplete($i)
     {
         $this->documentManager->flush();
-        $this->documentManager->clear();
+        //$this->documentManager->clear(); WE CANNOT DO THIS, as the references in the next documents become invalid
         gc_collect_cycles();
 
         if ($this->progressListener) {
