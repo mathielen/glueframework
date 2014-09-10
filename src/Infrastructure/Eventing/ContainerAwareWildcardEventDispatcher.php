@@ -31,12 +31,12 @@ class ContainerAwareWildcardEventDispatcher extends ContainerAwareEventDispatche
     private function resolveWildcardListeners($eventName)
     {
         foreach ($this->wildcardListeners as $regexp => $listener) {
-            if (preg_match($regexp, $eventName)) {
+            if (preg_match('/'.$regexp.'/', $eventName)) {
                 $this->addListener($eventName, $listener);
             }
         }
         foreach ($this->wildcardListenerIds as $regexp => $callback) {
-            if (preg_match($regexp, $eventName)) {
+            if (preg_match('/'.$regexp.'/', $eventName)) {
                 $this->addListenerService($eventName, $callback);
             }
         }

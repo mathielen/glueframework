@@ -1,9 +1,6 @@
 <?php
 namespace Infrastructure\Writer;
 
-use Infrastructure\Search\Dto\FilterInterface;
-use Infrastructure\Search\Finder;
-use Infrastructure\Search\Dto\Query;
 use Infrastructure\Persistence\Repository;
 
 class SimpleWriter

@@ -3,18 +3,26 @@
 	"require": {
 		"php":	">=5.3.6"
 	},
-	
 	"require-dev": {
         "symfony/event-dispatcher": "dev-master",
         "symfony/security": "*",
         "monolog/monolog": "dev-master",
-        "dannykopping/spore": "dev-master",
-        "dannykopping/docblock": "dev-master"        
-    },  
-
+        "dannykopping/spore": "*",
+        "dannykopping/docblock": "*",
+        "phpunit/phpunit" : "*",
+        "doctrine/mongodb-odm" : "1.0.*@dev",
+        "doctrine/orm" : "*",
+        "ruflin/elastica": "*"
+    },
 	"autoload": {
 		"psr-0": {
 			"Infrastructure": "src/"
 		}
-	}
+	},
+    "autoload-dev": {
+        "psr-0" : {
+            "TestEntities" : "tests/metadata/",
+            "TestDocuments" : "tests/metadata/"
+        }
+    }
 }

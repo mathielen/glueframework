@@ -1,5 +1,5 @@
 <?php
-namespace Infrastructure\Persistence;
+namespace TestEntities;
 
 use Doctrine\ORM\Mapping as ORM;
 

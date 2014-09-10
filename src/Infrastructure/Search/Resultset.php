@@ -17,6 +17,7 @@ class Resultset implements \IteratorAggregate, \Countable
     {
         if (is_null($value)) {
             $this->metadata = $class;
+
             return;
         }
 

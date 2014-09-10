@@ -45,7 +45,7 @@ class BatchSaver
 
         $i = 0;
         $size = count($list);
-        for($i;$i<$size;$i++) {
+        for ($i;$i<$size;$i++) {
             $document = $list[$i]; //TODO transform??
 
             try {
@@ -54,6 +54,7 @@ class BatchSaver
                 }
 
                 $this->documentManager->persist($document);
+                $this->documentManager->detach($document);
             } catch (\Exception $e) {
                 throw new \Exception('Error in batch saving with document: '.print_r($document, true), 0, $e);
             }
