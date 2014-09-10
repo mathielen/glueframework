@@ -8,8 +8,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 use Doctrine\ORM\EntityManager;
 
-use Doctrine\Common\Cache\ArrayCache;
-
 use Doctrine\ORM\Tools\Setup;
 
 /**

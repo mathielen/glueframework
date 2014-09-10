@@ -1,7 +1,6 @@
 <?php
 namespace Infrastructure\Persistence\MongoDB;
 
-use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\MongoDB\Connection;
 use Doctrine\ODM\MongoDB\Configuration;
 use Doctrine\ODM\MongoDB\DocumentManager;
@@ -9,8 +8,6 @@ use Doctrine\ODM\MongoDB\Mapping\Driver\AnnotationDriver;
 use TestDocuments\TestModel;
 
 use Doctrine\Common\Collections\ArrayCollection;
-
-use Doctrine\Common\Cache\ArrayCache;
 
 /**
  * @medium

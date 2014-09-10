@@ -15,6 +15,12 @@ class BatchSaver
 
     private $progressListener;
 
+    /**
+     * here, we collect all document classes, for flushing only them. this way we dont flush documents, that may
+     * be used as a reference
+     */
+    private $flushDocumentClasses;
+
     public function __construct(
         DocumentManager $documentManager,
         $chunkSize = 500)
@@ -47,6 +53,7 @@ class BatchSaver
         $size = count($list);
         for ($i;$i<$size;$i++) {
             $document = $list[$i]; //TODO transform??
+            $this->flushDocumentClasses[get_class($document)] = true;
 
             try {
                 if ($replace) {
@@ -54,7 +61,6 @@ class BatchSaver
                 }
 
                 $this->documentManager->persist($document);
-                //$this->documentManager->detach($document);
             } catch (\Exception $e) {
                 throw new \Exception('Error in batch saving with document: '.print_r($document, true), 0, $e);
             }
@@ -72,12 +78,16 @@ class BatchSaver
 
     private function chunkBegin()
     {
+        $this->flushDocumentClasses = array();
     }
 
     private function chunkComplete($i)
     {
         $this->documentManager->flush();
-        $this->documentManager->clear(); //WE CANNOT DO THIS, as the references in the next documents become invalid
+
+        foreach (array_keys($this->flushDocumentClasses) as $documentClass) {
+            $this->documentManager->clear($documentClass);
+        }
         gc_collect_cycles();
 
         if ($this->progressListener) {
