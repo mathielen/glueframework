@@ -54,7 +54,7 @@ class BatchSaver
                 }
 
                 $this->documentManager->persist($document);
-                $this->documentManager->detach($document);
+                //$this->documentManager->detach($document);
             } catch (\Exception $e) {
                 throw new \Exception('Error in batch saving with document: '.print_r($document, true), 0, $e);
             }
@@ -77,7 +77,7 @@ class BatchSaver
     private function chunkComplete($i)
     {
         $this->documentManager->flush();
-        //$this->documentManager->clear(); WE CANNOT DO THIS, as the references in the next documents become invalid
+        $this->documentManager->clear(); //WE CANNOT DO THIS, as the references in the next documents become invalid
         gc_collect_cycles();
 
         if ($this->progressListener) {

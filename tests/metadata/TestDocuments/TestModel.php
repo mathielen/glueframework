@@ -26,4 +26,9 @@ class TestModel
         }
     }
 
+    public function getId()
+    {
+        return $this->id;
+    }
+
 }
