@@ -1,6 +1,7 @@
 <?php
 namespace Infrastructure\Writer;
 
+use Infrastructure\Persistence\PersistenceException;
 use Infrastructure\Persistence\Repository;
 
 class SimpleWriter
@@ -30,20 +31,29 @@ class SimpleWriter
         $this->translate($data);
 
         $entityClass = $this->entityClass;
-        $entity = new $entityClass($data);
 
-        return $this->persist($entity);
+        try {
+            $entity = new $entityClass($data);
+
+            return $this->persist($entity);
+        } catch (\Exception $e) {
+            throw new PersistenceException($data, $this->entityClass, $e);
+        }
     }
 
     public function save($entity, $data=array())
     {
         $this->translate($data);
 
-        if (!empty($data)) {
-            $entity->applyData($data);
-        }
+        try {
+            if (!empty($data)) {
+                $entity->applyData($data);
+            }
 
-        return $this->persist($entity);
+            return $this->persist($entity);
+        } catch (\Exception $e) {
+            throw PersistenceException::fromEntity($entity, $e, 'New data: '.print_r($data, true));
+        }
     }
 
     protected function persist($entity)
