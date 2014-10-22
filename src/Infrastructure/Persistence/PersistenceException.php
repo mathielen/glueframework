@@ -8,7 +8,7 @@ class PersistenceException extends \Exception
 
     public static function fromEntity($entity, \Exception $previous, $additionalInfo='')
     {
-        return new self(Debug::export($entity, 1), get_class($entity), $previous, $additionalInfo);
+        return new self((array) Debug::export($entity, 1), get_class($entity), $previous, $additionalInfo);
     }
 
     public function __construct(array $data, $entityCls, \Exception $previous, $additionalInfo='')
