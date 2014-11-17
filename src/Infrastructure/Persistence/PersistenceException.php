@@ -13,7 +13,7 @@ class PersistenceException extends \Exception
 
     public function __construct(array $data, $entityCls, \Exception $previous, $additionalInfo='')
     {
-        $message = "Exception in persisting entity of class $entityCls\nwith contents:\n".print_r($data, true)."\n$additionalInfo";
+        $message = "Exception in persisting entity of class $entityCls\nwith contents:\n".print_r(Debug::export($data, 2), true)."\n$additionalInfo";
 
         parent::__construct($message, 0, $previous);
     }
