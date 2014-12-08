@@ -69,7 +69,7 @@ class ExcelReportWriter implements ReportWriterInterface
             $this->outputSheet->getColumnDimension($col)->setWidth($columnDimension->getWidth());
         }
 
-        $this->writeRange(1, $this->template->getNamedRange('HEADER'));
+        return $this->writeRange(1, $this->template->getNamedRange('HEADER'));
     }
 
     private function clean()
@@ -89,9 +89,9 @@ class ExcelReportWriter implements ReportWriterInterface
 
     public function write(Report $report, $templateId)
     {
-        $this->prepare($templateId);
+        $currentRowNum = $this->prepare($templateId);
 
-        $this->loop(4, $report->getData());
+        $this->loop(1+$currentRowNum, $report->getData());
 
         $this->clean();
 
@@ -143,6 +143,7 @@ class ExcelReportWriter implements ReportWriterInterface
         $numItems = count($data);
         $i = 0;
         foreach ($data as $key=>$currentData) {
+            $rowsAdvanced = 0;
             if ($namedRange) {
                 $rowsAdvanced = $this->writeRange($rowNum, $namedRange, $currentData);
             }
@@ -160,7 +161,7 @@ class ExcelReportWriter implements ReportWriterInterface
                 }
             }
 
-            if (++$i !== $numItems) {
+            if (++$i !== $numItems && $rowsAdvanced > 0) {
                 $rowNum += $rowsAdvanced;
             }
         }
