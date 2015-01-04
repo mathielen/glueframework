@@ -1,8 +1,6 @@
 <?php
 namespace Infrastructure\Symfony2;
 
-use JMS\DiExtraBundle\Config\FastDirectoriesResource;
-use Oro\Component\Config\CumulativeResource;
 use Symfony\Component\Config\Resource\DirectoryResource;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\HttpKernel\Kernel;
@@ -166,7 +164,7 @@ abstract class GlueKernel extends Kernel
             if (is_array($bundle)) {
                 $class    = $bundle['name'];
                 $kernel   = isset($bundle['kernel']) && true == $bundle['kernel'];
-                $priority = isset($bundle['priority']) ? (int)$bundle['priority'] : 0;
+                $priority = isset($bundle['priority']) ? (int) $bundle['priority'] : 0;
             } else {
                 $class = $bundle;
             }
@@ -192,12 +190,12 @@ abstract class GlueKernel extends Kernel
     {
         // @todo: this is preliminary algorithm. we need to implement more sophisticated one,
         // for example using bundle dependency info from composer.json
-        $p1 = (int)$a['priority'];
-        $p2 = (int)$b['priority'];
+        $p1 = (int) $a['priority'];
+        $p2 = (int) $b['priority'];
 
         if ($p1 == $p2) {
-            $n1 = (string)$a['name'];
-            $n2 = (string)$b['name'];
+            $n1 = (string) $a['name'];
+            $n2 = (string) $b['name'];
 
             //removed ORO stuff
 
@@ -264,4 +262,4 @@ abstract class GlueKernel extends Kernel
         parent::initializeContainer();
     }
 
-} 
+}

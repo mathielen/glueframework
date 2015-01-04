@@ -1,7 +1,6 @@
 <?php
 namespace Infrastructure\Persistence\MongoDB;
 
-use Doctrine\Common\Util\Debug;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Infrastructure\Persistence\PersistenceException;
 
@@ -39,7 +38,7 @@ class BatchSaver
 
     public function save(\Traversable $list)
     {
-        $this->process($list, function($document) {
+        $this->process($list, function ($document) {
             $this->flushDocumentClasses[get_class($document)] = true;
             $this->documentManager->persist($document);
         });
@@ -47,7 +46,7 @@ class BatchSaver
 
     public function replace(\Traversable $list)
     {
-        $this->process($list, function($document) {
+        $this->process($list, function ($document) {
             $this->documentManager->remove($document);
             $this->documentManager->persist($document);
         });
@@ -55,7 +54,7 @@ class BatchSaver
 
     public function remove(\Traversable $list)
     {
-        $this->process($list, function($document) {
+        $this->process($list, function ($document) {
             $this->documentManager->remove($document);
         });
     }
@@ -72,7 +71,7 @@ class BatchSaver
             try {
                 call_user_func($callable, $document);
             } catch (\Exception $e) {
-                throw new PersistenceException((array)$document, get_class($document), $e, $e.'');
+                throw new PersistenceException((array) $document, get_class($document), $e, $e.'');
             }
 
             if ($i % $this->chunkSize == 0) {

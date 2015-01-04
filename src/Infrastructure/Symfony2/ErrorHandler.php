@@ -12,8 +12,8 @@ class ErrorHandler
     }
 
     /**
-     * @param int $number
-     * @param string $string
+     * @param  int    $number
+     * @param  string $string
      * @return bool
      */
     public function handleWarning($number, $string)

@@ -67,9 +67,35 @@ class Utils
         return $request;
     }
 
+    /**
+     * @return bool
+     */
+    public static function isWindows()
+    {
+        return (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN');
+    }
+
+    /**
+     * @return bool
+     */
     public static function isCli()
     {
         return php_sapi_name() == "cli";
+    }
+
+    /**
+     * @return string
+     */
+    public static function whoAmI()
+    {
+        if (self::isWindows()) {
+            $user = getenv("username");
+        } else {
+            $processUser = posix_getpwuid(posix_geteuid());
+            $user = $processUser['name'];
+        }
+
+        return $user;
     }
 
 }
