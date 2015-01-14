@@ -45,7 +45,35 @@ class ExcelReportWriter implements ReportWriterInterface
         $this->saveDir = $saveDir;
     }
 
-    private function prepare($templateId)
+    private function clean()
+    {
+        $this->output->setActiveSheetIndexByName('TEMPLATE');
+        $this->output->removeSheetByIndex($this->output->getActiveSheetIndex());
+    }
+
+    private function save()
+    {
+        $filename = $this->saveDir.'/'.uniqid().'.xls';
+        $writer = new \PHPExcel_Writer_Excel5($this->output);
+        $writer->save($filename);
+
+        return $filename;
+    }
+
+    public function write(Report $report, $templateId)
+    {
+        $data = $report->getData();
+
+        $currentRowNum = $this->prepare($templateId, $data);
+
+        $this->loop(1+$currentRowNum, $data);
+
+        $this->clean();
+
+        return $this->save();
+    }
+
+    private function prepare($templateId, array $data)
     {
         $file = $this->templateRepository->get($templateId);
         if (is_null($file)) {
@@ -69,44 +97,17 @@ class ExcelReportWriter implements ReportWriterInterface
             $this->outputSheet->getColumnDimension($col)->setWidth($columnDimension->getWidth());
         }
 
-        return $this->writeRange(1, $this->template->getNamedRange('HEADER'));
-    }
-
-    private function clean()
-    {
-        $this->output->setActiveSheetIndexByName('TEMPLATE');
-        $this->output->removeSheetByIndex($this->output->getActiveSheetIndex());
-    }
-
-    private function save()
-    {
-        $filename = $this->saveDir.'/'.uniqid().'.xls';
-        $writer = new \PHPExcel_Writer_Excel5($this->output);
-        $writer->save($filename);
-
-        return $filename;
-    }
-
-    public function write(Report $report, $templateId)
-    {
-        $currentRowNum = $this->prepare($templateId);
-
-        $this->loop(1+$currentRowNum, $report->getData());
-
-        $this->clean();
-
-        return $this->save();
+        return $this->writeRange(1, $this->template->getNamedRange('HEADER'), $data);
     }
 
     private function writeRange($currentRowNum, \PHPExcel_NamedRange $namedRange, array $currentData=array())
     {
-//echo "writing range ".$namedRange->getName()."\n";
-
         $rangeData = $this->templateSheet->rangeToArray($namedRange->getRange(), null, false, true, true);
 
         $i = 0;
         foreach ($rangeData as $rangeRowNum => $rangeCols) {
-//echo "row: ".($currentRowNum+$i)."\n";
+            $rangeCols = array_filter($rangeCols);
+
             foreach ($rangeCols as $rangeColNum => $rangeCellValue) {
                 $templateCor = $rangeColNum.$rangeRowNum; //A1...
                 $outputCor = $rangeColNum.($currentRowNum+$i); //A1...
@@ -152,9 +153,7 @@ class ExcelReportWriter implements ReportWriterInterface
             $recursionProperties = $this->getRecursionProperties($currentData);
             if (count($recursionProperties) > 0) {
                 foreach ($recursionProperties as $property) {
-///echo "recurse for ".$property."\n";
                     $subData = $currentData[$property];
-                    //$subData[Inflector::singularize($property)] = $currentData;
                     $nr = $this->template->getNamedRange(strtoupper($property));
 
                     $rowNum = $this->loop($rowNum, $subData, $nr);
@@ -171,6 +170,10 @@ class ExcelReportWriter implements ReportWriterInterface
 
     private function getRecursionProperties($currentData)
     {
+        if (!is_array($currentData)) {
+            return [];
+        }
+
         $curDataKeys = array_keys($currentData);
         $namedRangeLowerNames = array_keys(array_change_key_case($this->template->getNamedRanges(), CASE_LOWER));
 
@@ -183,7 +186,6 @@ class ExcelReportWriter implements ReportWriterInterface
             $propertyPath = Inflector::camelize(strtolower($matches[1]));
 
             $propertyPath = explode('.', $propertyPath);
-
             return $this->resolvePropertyPath($propertyPath, $data);
         }
 
