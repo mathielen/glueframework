@@ -35,6 +35,11 @@ class ExcelReportWriter implements ReportWriterInterface
      */
     private $outputSheet;
 
+    /**
+     * @var array
+     */
+    private $data;
+
     public function __construct(Repository $templateRepository, $saveDir)
     {
         if (!is_dir($saveDir) || !is_writable($saveDir)) {
@@ -62,15 +67,25 @@ class ExcelReportWriter implements ReportWriterInterface
 
     public function write(Report $report, $templateId)
     {
-        $data = $report->getData();
+        $this->data = $report->getData();
 
-        $currentRowNum = $this->prepare($templateId, $data);
+        $currentRowNum = $this->prepare($templateId, $this->data);
 
-        $this->loop(1+$currentRowNum, $data);
+        $currentRowNum = $this->loop(1+$currentRowNum, $this->data['root']);
+
+        $this->finish($currentRowNum, $this->data);
 
         $this->clean();
 
         return $this->save();
+    }
+
+    private function finish($currentRowNum, array $data)
+    {
+        $footer = $this->template->getNamedRange('FOOTER');
+        if ($footer) {
+            $this->writeRange($currentRowNum, $footer, $data);
+        }
     }
 
     private function prepare($templateId, array $data)
@@ -106,28 +121,30 @@ class ExcelReportWriter implements ReportWriterInterface
 
         $i = 0;
         foreach ($rangeData as $rangeRowNum => $rangeCols) {
-            $rangeCols = array_filter($rangeCols);
-
             foreach ($rangeCols as $rangeColNum => $rangeCellValue) {
                 $templateCor = $rangeColNum.$rangeRowNum; //A1...
                 $outputCor = $rangeColNum.($currentRowNum+$i); //A1...
 
-                //is formula
-                if (substr($rangeCellValue, 0, 1) == '=') {
-                    $rowDelta = $currentRowNum+$i-$rangeRowNum;
+                if (!empty($rangeCellValue)) {
+                    $cellValue = empty($currentData) ? $rangeCellValue : $this->translate($rangeCellValue, $currentData);
 
-                    //has ref to field
-                    $cellValue = preg_replace_callback(
-                        '/([A-Z]{1,2})([0-9])+/',
-                        function ($matches) use ($rowDelta) {
-                            return $matches[1] . ($matches[2]+$rowDelta);
-                        },
-                        $rangeCellValue);
-                } else {
-                    $cellValue = empty($currentData)?$rangeCellValue:$this->translate($rangeCellValue, $currentData);
+                    //is formula
+                    if (substr($rangeCellValue, 0, 1) == '=') {
+                        $rowDelta = $currentRowNum + $i - $rangeRowNum;
+
+                        //has ref to field - add row-offset
+                        $cellValue = preg_replace_callback(
+                            '/([A-Z]{1,2})([0-9])+/',
+                            function ($matches) use ($rowDelta) {
+                                $offsettedY = ($matches[2] + $rowDelta);
+                                return $matches[1] . $offsettedY;
+                            },
+                            $cellValue);
+                    }
+
+                    //set value
+                    $this->outputSheet->getCell($outputCor)->setValue($cellValue);
                 }
-                //set value
-                $this->outputSheet->getCell($outputCor)->setValue($cellValue);
 
                 //set style
                 $this->outputSheet->duplicateStyle($this->templateSheet->getStyle($templateCor),$outputCor);
@@ -156,7 +173,7 @@ class ExcelReportWriter implements ReportWriterInterface
                     $subData = $currentData[$property];
                     $nr = $this->template->getNamedRange(strtoupper($property));
 
-                    $rowNum = $this->loop($rowNum, $subData, $nr);
+                    $rowNum = $this->loop($rowNum+1, $subData, $nr);
                 }
             }
 
@@ -182,14 +199,19 @@ class ExcelReportWriter implements ReportWriterInterface
 
     private function translate($templateValue, array $data)
     {
-        if (preg_match('/{{(.+)}}/', $templateValue, $matches)) {
-            $propertyPath = Inflector::camelize(strtolower($matches[1]));
+        return preg_replace_callback('/"?{{(.+)}}"?/', function($matches) use($data) {
+            $property = $matches[1];
 
+            //use rootdata instead of scope data
+            if (substr($property, 0, 2) == '//') {
+                $property = substr($property, 2);
+                $data = $this->data['root'][0];
+            }
+
+            $propertyPath = Inflector::camelize(strtolower($property));
             $propertyPath = explode('.', $propertyPath);
             return $this->resolvePropertyPath($propertyPath, $data);
-        }
-
-        return $templateValue;
+        }, $templateValue);
     }
 
     private function resolvePropertyPath(array $propertyPath, $data)
