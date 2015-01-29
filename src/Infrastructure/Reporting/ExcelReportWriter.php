@@ -68,6 +68,9 @@ class ExcelReportWriter implements ReportWriterInterface
     public function write(Report $report, $templateId)
     {
         $this->data = $report->getData();
+        if (!array_key_exists('root', $this->data)) {
+            throw new \InvalidArgumentException("Cannot write ExcelReport. Missing 'root' entry in Report data!");
+        }
 
         $currentRowNum = $this->prepare($templateId, $this->data);
 
