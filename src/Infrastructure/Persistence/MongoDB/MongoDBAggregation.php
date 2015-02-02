@@ -42,7 +42,7 @@ class MongoDBAggregation
     public function query($collectionName, array $query)
     {
         //TODO check if DB and collection exists
-        if (!in_array($collectionName, ['Order', 'Stock'])) {
+        if (!in_array($collectionName, ['OrderPosition', 'Order', 'Stock'])) {
             throw new ResourceNotFoundException('Collection', $collectionName);
         }
 
