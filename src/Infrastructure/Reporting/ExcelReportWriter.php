@@ -137,7 +137,7 @@ class ExcelReportWriter implements ReportWriterInterface
 
                         //has ref to field - add row-offset
                         $cellValue = preg_replace_callback(
-                            '/([A-Z]{1,2})([0-9])+/',
+                            '/([A-Z]+)([0-9])+/',
                             function ($matches) use ($rowDelta) {
                                 $offsettedY = ($matches[2] + $rowDelta);
                                 return $matches[1] . $offsettedY;
@@ -176,7 +176,14 @@ class ExcelReportWriter implements ReportWriterInterface
                     $subData = $currentData[$property];
                     $nr = $this->template->getNamedRange(strtoupper($property));
 
-                    $rowNum = $this->loop($rowNum+1, $subData, $nr);
+                    //Calculate the Y offset between the 2 named ranges
+                    if ($namedRange) {
+                        $offset = $this->calculateRangeYOffset($namedRange->getRange(), $nr->getRange());
+                    } else {
+                        $offset = 1;
+                    }
+
+                    $rowNum = $this->loop($rowNum+$offset, $subData, $nr);
                 }
             }
 
@@ -186,6 +193,14 @@ class ExcelReportWriter implements ReportWriterInterface
         }
 
         return $rowNum;
+    }
+
+    private function calculateRangeYOffset($range1, $range2)
+    {
+        preg_match('/([A-Z]+)([0-9])+:/', $range1, $matches1);
+        preg_match('/([A-Z]+)([0-9])+:/', $range2, $matches2);
+
+        return $matches2[2]-$matches1[2];
     }
 
     private function getRecursionProperties($currentData)
