@@ -4,6 +4,7 @@ namespace Infrastructure\Persistence\MongoDB;
 
 use Doctrine\MongoDB\Connection;
 use Infrastructure\Exception\ResourceNotFoundException;
+use Infrastructure\Search\SearchException;
 
 class MongoDBAggregation
 {
@@ -49,7 +50,11 @@ class MongoDBAggregation
         $collection = $this->getMongoClient()->selectDB('reporting_portal')->selectCollection($collectionName);
 
         $ms = microtime(true);
-        $result = $collection->aggregate($query);
+        try {
+            $result = $collection->aggregate($query);
+        } catch (\Exception $e) {
+            throw new AggregationException($query, $e);
+        }
         $me = microtime(true);
 
         $this->executedQueries[] = [
