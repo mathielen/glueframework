@@ -4,6 +4,9 @@ namespace Infrastructure\Persistence;
 interface Repository
 {
 
+    const STRATEGY_EAGER = 'eager';
+    const STRATEGY_CONSOLIDATED = 'consolidated';
+
     /**
      * returns specific connection object for this kind of repository
      */

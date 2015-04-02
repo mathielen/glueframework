@@ -1,7 +1,6 @@
 <?php
 namespace Infrastructure\Intl;
 
-
 class RegionBundleExtension
 {
 

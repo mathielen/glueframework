@@ -140,6 +140,7 @@ class ExcelReportWriter implements ReportWriterInterface
                             '/([A-Z]+)([0-9])+/',
                             function ($matches) use ($rowDelta) {
                                 $offsettedY = ($matches[2] + $rowDelta);
+
                                 return $matches[1] . $offsettedY;
                             },
                             $cellValue);
@@ -217,7 +218,7 @@ class ExcelReportWriter implements ReportWriterInterface
 
     private function translate($templateValue, array $data)
     {
-        return preg_replace_callback('/"?{{(.+)}}"?/', function($matches) use($data) {
+        return preg_replace_callback('/"?{{(.+)}}"?/', function ($matches) use ($data) {
             $property = $matches[1];
 
             //use rootdata instead of scope data
@@ -228,6 +229,7 @@ class ExcelReportWriter implements ReportWriterInterface
 
             $propertyPath = Inflector::camelize(strtolower($property));
             $propertyPath = explode('.', $propertyPath);
+
             return $this->resolvePropertyPath($propertyPath, $data);
         }, $templateValue);
     }

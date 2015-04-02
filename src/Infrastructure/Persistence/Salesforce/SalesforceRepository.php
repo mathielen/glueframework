@@ -1,25 +1,42 @@
 <?php
 namespace Infrastructure\Persistence\Salesforce;
 
-use Infrastructure\Exception\ResourceNotFoundException;
-use Doctrine\ODM\MongoDB\DocumentManager;
+use Ddeboer\Salesforce\MapperBundle\Mapper;
+use Ddeboer\Salesforce\MapperBundle\Response\MappedRecordIterator;
+use Infrastructure\Persistence\Repository;
 
 class SalesforceRepository implements \Infrastructure\Persistence\Repository
 {
 
     /**
-     * @var DocumentManager
+     * @var Mapper
      */
-    private $documentManager;
+    private $mapper;
 
     private $entityName;
+    private $strategy;
+
+    /**
+     * @var MappedRecordIterator
+     */
+    private $modelList = null;
+
+    private $deleteList = [];
+    private $saveList = [];
 
     public function __construct(
-        DocumentManager $documentManager,
-        $entityName)
+        Mapper $mapper,
+        $entityName,
+        $strategy = Repository::STRATEGY_EAGER)
     {
-        $this->documentManager = $documentManager;
+        $this->mapper = $mapper;
         $this->entityName = $entityName;
+        $this->strategy = $strategy;
+    }
+
+    private function modelList()
+    {
+
     }
 
     /**
@@ -28,7 +45,7 @@ class SalesforceRepository implements \Infrastructure\Persistence\Repository
      */
     public function getConnection()
     {
-        return $this->documentManager;
+        return $this->mapper;
     }
 
     /**
@@ -37,8 +54,13 @@ class SalesforceRepository implements \Infrastructure\Persistence\Repository
      */
     public function save($object)
     {
-        $this->documentManager->persist($object);
-        $this->documentManager->flush(); //flush everything pending (so cascaded objects get flushed, too)
+        if ($this->strategy === Repository::STRATEGY_EAGER) {
+            $this->mapper->save($object);
+        } else {
+            $this->saveList[] = $object;
+        }
+
+        return $object;
     }
 
     /**
@@ -51,7 +73,15 @@ class SalesforceRepository implements \Infrastructure\Persistence\Repository
             throw new \InvalidArgumentException('Cannot fetch record. Empty id supplied.');
         }
 
-        return $this->documentManager->find($this->entityName, $id);
+        if ($this->strategy === Repository::STRATEGY_EAGER) {
+            return $this->mapper->findOneBy($this->entityName, ['id'=>$id]);
+        } else {
+            if (!array_key_exists($id, $this->getAll())) {
+                return null;
+            }
+
+            return $this->getAll()[$id];
+        }
     }
 
     /**
@@ -60,17 +90,28 @@ class SalesforceRepository implements \Infrastructure\Persistence\Repository
      */
     public function delete($id)
     {
-        if (empty($id)) {
-            throw new \InvalidArgumentException('Cannot delete record. Empty id supplied.');
+        if ($this->strategy === Repository::STRATEGY_EAGER) {
+            return $this->mapper->delete($this->get($id));
+        } else {
+            $this->deleteList[] = $id;
+        }
+    }
+
+    public function flush()
+    {
+        $this->mapper->delete($this->deleteList);
+        $this->mapper->save($this->saveList);
+    }
+
+    public function getAll()
+    {
+        if (is_null($this->modelList)) {
+            foreach ($this->mapper->findAll($this->entityName) as $model) {
+                $this->modelList[$model->getId()] = $model;
+            }
         }
 
-        $object = $this->get($id);
-        if (!$object) {
-            throw new ResourceNotFoundException($this->entityName, $id);
-        }
-
-        $this->documentManager->remove($object);
-        $this->documentManager->flush();
+        return $this->modelList;
     }
 
 }

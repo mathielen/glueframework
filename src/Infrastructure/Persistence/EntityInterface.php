@@ -1,7 +1,7 @@
 <?php
 namespace Infrastructure\Persistence;
 
-interface Entity
+interface EntityInterface
 {
 
     public function getId();

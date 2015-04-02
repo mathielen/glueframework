@@ -11,7 +11,7 @@ class DocumentFactory
     /**
      * @return \Elastica_Document
      */
-    public function toElasticSearchDocument(Entity $entity)
+    public function toElasticSearchDocument(EntityInterface $entity)
     {
         $data = get_object_vars($entity);
         $document = new \Elastica\Document($entity->id, $data);

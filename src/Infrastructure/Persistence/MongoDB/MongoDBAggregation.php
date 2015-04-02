@@ -1,10 +1,8 @@
 <?php
 namespace Infrastructure\Persistence\MongoDB;
 
-
 use Doctrine\MongoDB\Connection;
 use Infrastructure\Exception\ResourceNotFoundException;
-use Infrastructure\Search\SearchException;
 
 class MongoDBAggregation
 {

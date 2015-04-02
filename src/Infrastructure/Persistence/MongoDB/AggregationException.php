@@ -1,7 +1,6 @@
 <?php
 namespace Infrastructure\Persistence\MongoDB;
 
-
 use Infrastructure\Search\SearchException;
 
 class AggregationException extends SearchException
