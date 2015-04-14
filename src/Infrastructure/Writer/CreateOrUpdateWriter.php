@@ -40,7 +40,7 @@ class CreateOrUpdateWriter
         if (!$this->idResolver && $model instanceof EntityInterface) {
             return $model->getId();
         } elseif ($this->idResolver) {
-            return $this->idResolver->resolveId($model);
+            return $this->idResolver->resolveByModel($model);
         }
 
         throw new \LogicException("Cannot resolve Id");
@@ -50,7 +50,11 @@ class CreateOrUpdateWriter
     {
         $id = $this->getId($model);
         if ($id) {
-            $entity = $this->update($this->repository->get($id), $model);
+            $entity = $this->repository->get($id);
+            if (!$this->update($entity, $model)) {
+                //do not save, if no update
+                return false;
+            }
         } else {
             $entity = $this->create($model);
         }
@@ -60,20 +64,22 @@ class CreateOrUpdateWriter
 
     protected function update(EntityInterface $existentEntity, $inputEntity)
     {
-        if ($existentEntity instanceof MergeableEntityInterface) {
+        if ($existentEntity instanceof MergeableEntityInterface && $inputEntity instanceof MergeableEntityInterface) {
             $existentEntity->merge($inputEntity);
+
+            return true;
         }
 
-        return $existentEntity;
+        return false;
     }
 
-    protected function create($inputEntity)
+    protected function create($model)
     {
         if (!$this->factory) {
-            return $inputEntity;
+            return $model;
         }
 
-        $entity = $this->factory->factor($inputEntity);
+        $entity = $this->factory->factor($model);
 
         return $entity;
     }

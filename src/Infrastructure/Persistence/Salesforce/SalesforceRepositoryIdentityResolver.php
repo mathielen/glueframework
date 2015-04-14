@@ -75,11 +75,13 @@ class SalesforceRepositoryIdentityResolver implements IdentityResolverInterface
     {
         if (!$this->idsResolved) {
             $models = $this->repository->getAll();
-            foreach ($models as $model) {
-                $id = $model->getId();
-                $values = $this->getIdValuesFromModel($model);
+            if ($models) {
+                foreach ($models as $model) {
+                    $id = $model->getId();
+                    $values = $this->getIdValuesFromModel($model);
 
-                $this->idCache->save($this->getCacheIdFromValues($values), $id);
+                    $this->idCache->save($this->getCacheIdFromValues($values), $id);
+                }
             }
 
             $this->idsResolved = true;
@@ -93,18 +95,35 @@ class SalesforceRepositoryIdentityResolver implements IdentityResolverInterface
         return json_encode($values);
     }
 
-    public function resolveId($values)
+    public function resolveByValues($values)
     {
         if (empty($values)) {
-            throw new \InvalidArgumentException("Cannot resolve id from empty value(s)");
+            throw new \InvalidArgumentException("Cannot resolve id from empty values");
         }
 
-        $cacheId = $this->getCacheIdFromValues($this->getIdValuesFromModel($values));
+        $cacheId = $this->getCacheIdFromValues($values);
         if (!$this->cache()->contains($cacheId)) {
             return null;
         }
 
         return $this->cache()->fetch($cacheId);
+    }
+
+    public function resolveByModel($model)
+    {
+        if (empty($model)) {
+            throw new \InvalidArgumentException("Cannot resolve id from empty model");
+        }
+
+        return $this->resolveByValues($this->getIdValuesFromModel($model));
+    }
+
+    /**
+     * @return Cache
+     */
+    public function getIdCache()
+    {
+        return $this->idCache;
     }
 
 }

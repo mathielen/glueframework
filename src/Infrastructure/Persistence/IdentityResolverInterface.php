@@ -4,6 +4,8 @@ namespace Infrastructure\Persistence;
 interface IdentityResolverInterface
 {
 
-    public function resolveId($model);
+    public function resolveByModel($model);
+
+    public function resolveByValues($values);
 
 }
