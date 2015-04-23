@@ -1,10 +1,6 @@
 <?php
 namespace Infrastructure\Persistence;
 
-interface MergeableEntityInterface extends EntityInterface
+interface MergeableEntityInterface extends EntityInterface, MergeableInterface
 {
-
-    public function merge(MergeableEntityInterface $entity);
-    public function getMergeValues();
-
 }

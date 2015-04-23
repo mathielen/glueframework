@@ -63,9 +63,8 @@ class BatchSaver
     {
         $this->chunkBegin();
 
-        $i = 0;
         $size = count($list);
-        for ($i;$i<$size;$i++) {
+        for ($i=1;$i<$size;$i++) {
             $document = $list[$i]; //TODO transform??
 
             try {
@@ -94,8 +93,9 @@ class BatchSaver
     {
         $this->documentManager->flush();
 
+        //TODO that does not work with embedded objects (@EmbedMany) => embedded documents wont get updated
         foreach (array_keys($this->flushDocumentClasses) as $documentClass) {
-            $this->documentManager->clear($documentClass);
+            //$this->documentManager->clear($documentClass);
         }
         gc_collect_cycles();
 
