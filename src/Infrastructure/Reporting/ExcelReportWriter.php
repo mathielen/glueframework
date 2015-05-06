@@ -218,7 +218,7 @@ class ExcelReportWriter implements ReportWriterInterface
 
     private function translate($templateValue, array $data)
     {
-        return preg_replace_callback('/"?{{(.+)}}"?/', function ($matches) use ($data) {
+        $translated = preg_replace_callback('/"?{{(.+)}}"?/', function ($matches) use ($data) {
             $property = $matches[1];
 
             //use rootdata instead of scope data
@@ -232,6 +232,8 @@ class ExcelReportWriter implements ReportWriterInterface
 
             return $this->resolvePropertyPath($propertyPath, $data);
         }, $templateValue);
+
+        return $translated;
     }
 
     private function resolvePropertyPath(array $propertyPath, $data)

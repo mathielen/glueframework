@@ -5,7 +5,6 @@ use Symfony\Component\Config\Resource\DirectoryResource;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Config\ConfigCache;
-use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
 use Symfony\Bridge\ProxyManager\LazyProxy\PhpDumper\ProxyDumper;
@@ -35,15 +34,20 @@ abstract class GlueKernel extends Kernel
      *
      * @return array List ob bundle objects
      */
-    public function registerBundles()
+    public function registerBundles(array $blackList=[])
     {
+        if (!empty($blackList)) {
+            $blackList = array_flip($blackList);
+            $blackList = array_change_key_case($blackList, CASE_LOWER);
+        }
+
         // clear state of CumulativeResourceManager
         CumulativeResourceManager::getInstance()->clear();
 
         $bundles = [];
 
         if (!$this->getCacheDir()) {
-            foreach ($this->collectBundles() as $class => $params) {
+            foreach ($this->collectBundles($blackList) as $class => $params) {
                 $bundles[] = $params['kernel']
                     ? new $class($this)
                     : new $class;
@@ -53,7 +57,7 @@ abstract class GlueKernel extends Kernel
             $cache = new ConfigCache($file, $this->debug);
 
             if (!$cache->isFresh($file)) {
-                $bundles = $this->collectBundles();
+                $bundles = $this->collectBundles($blackList);
                 $dumper = new PhpBundlesDumper($bundles);
 
                 $metaData = [];
@@ -61,7 +65,7 @@ abstract class GlueKernel extends Kernel
                     $metaData[] = new FileResource($bundle['file']);
                 }
                 $metaData[] = new FileResource($this->rootDir . '/../composer.lock'); //a composer update might add bundles
-                $metaData[] = new DirectoryResource($this->rootDir . '/../src/', '/^bundles.yml$/'); //all bundles.yml in src
+                $metaData[] = new DirectoryResource($this->rootDir . '/../src/', '/.*Bundle.php$/'); //all bundle.php files
 
                 $cache->write($dumper->dump(), $metaData);
             }
@@ -80,9 +84,9 @@ abstract class GlueKernel extends Kernel
      *
      * @return array
      */
-    protected function findBundles($roots = [])
+    protected function findBundles(array $roots = [], array $blackList = [])
     {
-        $paths = [];
+        $classes = [];
         foreach ($roots as $root) {
             if (!is_dir($root)) {
                 continue;
@@ -91,24 +95,42 @@ abstract class GlueKernel extends Kernel
             $dir    = new \RecursiveDirectoryIterator($root, \FilesystemIterator::FOLLOW_SYMLINKS);
             $filter = new \RecursiveCallbackFilterIterator(
                 $dir,
-                function (\SplFileInfo $current) use (&$paths) {
+                function (\SplFileInfo $current) use (&$classes, $root) {
                     $fileName = strtolower($current->getFilename());
                     if ($fileName === '.'
                         || $fileName === '..'
                         || $fileName === 'tests'
-                        || $current->isFile()
                     ) {
                         return false;
                     }
-                    if (!is_dir($current->getPathname() . '/Resources')) {
-                        return true;
-                    } else {
-                        $file = $current->getPathname() . '/Resources/config/glue/bundles.yml';
-                        if (is_file($file)) {
-                            $paths[] = $file;
+
+                    if ($current->isFile() && substr($fileName, -10) === 'bundle.php') {
+                        $classname = $this->getClassnameFromFile($current);
+
+                        //check blacklist
+                        if (isset($blackList[strtolower(substr($classname, 1))])) {
+                            return false;
                         }
 
-                        return false;
+                        try {
+                            $reflectionClass = new \ReflectionClass($classname);
+                            if ($reflectionClass->implementsInterface('Symfony\Component\HttpKernel\Bundle\BundleInterface') &&
+                                !$reflectionClass->isAbstract()) {
+                                $constructor = $reflectionClass->getConstructor();
+                                $needsKernel = $constructor && $constructor->getNumberOfRequiredParameters()>0;
+                                $priority = $this->getBundlePriority($reflectionClass);
+
+                                $classes[$classname] = [
+                                    'file' => $current->getRealPath(),
+                                    'kernel' => $needsKernel,
+                                    'priority' => $priority
+                                ];
+                            }
+                        } catch (\ReflectionException $e) {
+                            //skip
+                        }
+                    } elseif ($current->isDir()) {
+                        return true;
                     }
                 }
             );
@@ -117,34 +139,85 @@ abstract class GlueKernel extends Kernel
             $iterator->rewind();
         }
 
-        return $paths;
+        uasort($classes, function ($a, $b) {
+            if ($a['priority'] == $b['priority']) {
+                return 0;
+            }
+
+            return ($a['priority'] < $b['priority']) ? 1 : -1;
+        });
+
+        return $classes;
+    }
+
+    private function getBundlePriority(\ReflectionClass $reflectionClass)
+    {
+        $prio = 0;
+
+        $nsTokens = explode('\\', $reflectionClass->getNamespaceName());
+
+        if ($nsTokens[0] === 'Symfony') {
+            $prio += 128;
+        } elseif (in_array($nsTokens[0], ['Sensio', 'Doctrine', 'JMS'])) {
+            $prio += 64;
+        }
+
+        if (isset($nsTokens[2]) && $nsTokens[2] === 'FrameworkBundle') {
+            $prio += 8;
+        } elseif (isset($nsTokens[2]) && $nsTokens[2] === 'SecurityBundle') {
+            $prio += 4;
+        }
+
+        return $prio;
+    }
+
+    private function getClassnameFromFile($file)
+    {
+        $fp = fopen($file, 'r');
+        $class = $namespace = $buffer = '';
+        $i = 0;
+        while (!$class) {
+            if (feof($fp)) break;
+
+            $buffer .= fread($fp, 512);
+            @$tokens = token_get_all($buffer);
+
+            if (strpos($buffer, '{') === false) continue;
+
+            for (;$i<count($tokens);$i++) {
+                if ($tokens[$i][0] === T_NAMESPACE) {
+                    for ($j=$i+1;$j<count($tokens); $j++) {
+                        if ($tokens[$j][0] === T_STRING) {
+                            $namespace .= '\\'.$tokens[$j][1];
+                        } elseif ($tokens[$j] === '{' || $tokens[$j] === ';') {
+                            break;
+                        }
+                    }
+                }
+
+                if ($tokens[$i][0] === T_CLASS) {
+                    for ($j=$i+1;$j<count($tokens);$j++) {
+                        if ($tokens[$j] === '{') {
+                            $class = $tokens[$i+2][1];
+                        }
+                    }
+                }
+            }
+        }
+
+        return $namespace.'\\'.$class;
     }
 
     /**
      * @return array
      */
-    protected function collectBundles()
+    protected function collectBundles(array $blackList)
     {
-        $files = $this->findBundles(
-            [
-                $this->getRootDir() . '/../src',
-                $this->getRootDir() . '/../vendor'
-            ]
+        $bundles = $this->findBundles([
+                $this->getRootDir() . '/../src/',
+                $this->getRootDir() . '/../vendor/'
+            ], $blackList
         );
-
-        $bundles    = [];
-        $exclusions = [];
-        foreach ($files as $file) {
-            $import  = Yaml::parse($file);
-            $bundles = array_merge($bundles, $this->getBundlesMapping($import['bundles'], $file));
-            if (!empty($import['exclusions'])) {
-                $exclusions = array_merge($exclusions, $this->getBundlesMapping($import['exclusions'], $file));
-            }
-        }
-
-        $bundles = array_diff_key($bundles, $exclusions);
-
-        uasort($bundles, [$this, 'compareBundles']);
 
         return $bundles;
     }
@@ -178,57 +251,6 @@ abstract class GlueKernel extends Kernel
         }
 
         return $result;
-    }
-
-    /**
-     * @param array $a
-     * @param array $b
-     *
-     * @return int
-     */
-    public function compareBundles($a, $b)
-    {
-        // @todo: this is preliminary algorithm. we need to implement more sophisticated one,
-        // for example using bundle dependency info from composer.json
-        $p1 = (int) $a['priority'];
-        $p2 = (int) $b['priority'];
-
-        if ($p1 == $p2) {
-            $n1 = (string) $a['name'];
-            $n2 = (string) $b['name'];
-
-            //removed ORO stuff
-
-            // bundles with the same priorities are sorted alphabetically
-            return strcasecmp($n1, $n2);
-        }
-
-        // sort be priority
-        return ($p1 < $p2) ? -1 : 1;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @SuppressWarnings(PHPMD.ExitExpression)
-     */
-    public function boot()
-    {
-        /*$phpVersion = phpversion();
-
-        include_once $this->getRootDir() . '/OroRequirements.php';
-
-        if (!version_compare($phpVersion, OroRequirements::REQUIRED_PHP_VERSION, '>=')) {
-            throw new \Exception(
-                sprintf(
-                    'PHP version must be at least %s (%s is installed)',
-                    OroRequirements::REQUIRED_PHP_VERSION,
-                    $phpVersion
-                )
-            );
-        }*/
-
-        parent::boot();
     }
 
     /**

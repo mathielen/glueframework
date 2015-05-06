@@ -37,7 +37,14 @@ class MongoDBRepository implements \Infrastructure\Persistence\Repository
      */
     public function save($object)
     {
-        $this->documentManager->persist($object);
+        if ($object instanceof \Traversable) {
+            foreach ($object as $obj) {
+                $this->documentManager->persist($obj);
+            }
+        } else {
+            $this->documentManager->persist($object);
+        }
+
         $this->documentManager->flush(); //flush everything pending (so cascaded objects get flushed, too)
     }
 
