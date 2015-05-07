@@ -46,8 +46,11 @@ class FlushList extends \ArrayObject
 
     public function flush()
     {
-        call_user_func($this->invokeOnFlush, $this);
+        if (!$this->count()) {
+            return;
+        }
 
+        call_user_func($this->invokeOnFlush, $this);
         $this->clear();
     }
 
