@@ -18,6 +18,10 @@ class SimpleWriter
         Repository $repository,
         $entityClass)
     {
+        if (empty($entityClass) || !class_exists($entityClass)) {
+            throw new \InvalidArgumentException("entityClass must be a classname and cannot be empty");
+        }
+
         $this->repository = $repository;
         $this->entityClass = $entityClass;
     }
