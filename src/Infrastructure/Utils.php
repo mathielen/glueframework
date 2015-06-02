@@ -98,4 +98,45 @@ class Utils
         return $user;
     }
 
+    /**
+     * @return array
+     */
+    public static function numbersToRangeText(array $numbers)
+    {
+        if (empty($numbers)) {
+            return [];
+        }
+
+        $ranges = [];
+        sort($numbers);
+
+        $currentRange = [];
+        foreach ($numbers as $number) {
+            if (!empty($currentRange) && current($currentRange) !== $number-1) {
+                self::addRangeText($ranges, $currentRange);
+
+                $currentRange = [];
+            }
+
+            $currentRange[] = $number;
+            end($currentRange);
+        }
+
+        self::addRangeText($ranges, $currentRange);
+
+        return $ranges;
+    }
+
+    private static function addRangeText(array &$ranges, array $currentRange)
+    {
+        $lastItem = current($currentRange);
+
+        if (count($currentRange) === 1) {
+            $ranges[] = $lastItem;
+        } else {
+            $firstItem = reset($currentRange);
+            $ranges[] = $firstItem . '-' . $lastItem;
+        }
+    }
+
 }

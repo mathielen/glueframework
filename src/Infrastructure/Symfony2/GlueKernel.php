@@ -1,6 +1,7 @@
 <?php
 namespace Infrastructure\Symfony2;
 
+use Symfony\Component\Config\ConfigCacheInterface;
 use Symfony\Component\Config\Resource\DirectoryResource;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\HttpKernel\Kernel;
@@ -71,7 +72,7 @@ abstract class GlueKernel extends Kernel
             }
 
             // require instead of require_once used to correctly handle sub-requests
-            $bundles = require $cache;
+            $bundles = require ($cache instanceof ConfigCacheInterface)?$cache->getPath():$cache;
         }
 
         return $bundles;
