@@ -1,6 +1,7 @@
 <?php
 namespace Infrastructure\Symfony2;
 
+use Infrastructure\Symfony2\Config\CumulativeResourceManager;
 use Symfony\Component\Config\ConfigCacheInterface;
 use Symfony\Component\Config\Resource\DirectoryResource;
 use Symfony\Component\Config\Resource\FileResource;
@@ -9,8 +10,6 @@ use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
 use Symfony\Bridge\ProxyManager\LazyProxy\PhpDumper\ProxyDumper;
-
-use Oro\Component\Config\CumulativeResourceManager;
 
 abstract class GlueKernel extends Kernel
 {
@@ -79,7 +78,7 @@ abstract class GlueKernel extends Kernel
     }
 
     /**
-     * Finds all .../Resource/config/oro/bundles.yml in given root folders
+     * Finds all bundles in given root folders
      *
      * @param array $roots
      *
