@@ -38,6 +38,11 @@ class MongoDBAggregation
         return $this->executedQueries;
     }
 
+    /**
+     * @return \MongoCommandCursor
+     * @throws AggregationException
+     * @throws ResourceNotFoundException
+     */
     public function query($collectionName, array $query)
     {
         //TODO check if DB and collection exists
@@ -49,7 +54,8 @@ class MongoDBAggregation
 
         $ms = microtime(true);
         try {
-            $result = $collection->aggregate($query);
+            //aggregateCursor allows more than 16MB in resultset and might be faster
+            $result = $collection->aggregateCursor($query);
         } catch (\Exception $e) {
             throw new AggregationException($query, $e);
         }
@@ -61,7 +67,7 @@ class MongoDBAggregation
             'duration'=>$me-$ms
         ];
 
-        return $result['result'];
+        return $result;
     }
 
 }
