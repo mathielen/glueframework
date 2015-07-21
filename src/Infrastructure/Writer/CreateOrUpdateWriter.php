@@ -1,6 +1,7 @@
 <?php
 namespace Infrastructure\Writer;
 
+use Infrastructure\Exception\ResourceNotFoundException;
 use Infrastructure\Persistence\EntityInterface;
 use Infrastructure\Persistence\Factory;
 use Infrastructure\Persistence\IdentityResolverInterface;
@@ -46,20 +47,29 @@ class CreateOrUpdateWriter
         throw new \LogicException("Cannot resolve Id");
     }
 
+    /**
+     * @return object|bool
+     */
     public function write($model)
     {
         $id = $this->getId($model);
         if ($id) {
             $entity = $this->repository->get($id);
+            if (!$entity) {
+                throw new ResourceNotFoundException('Unknown', $id);
+            }
+
             if (!$this->update($entity, $model)) {
                 //do not save, if no update
-                return false;
+                return $entity;
             }
         } else {
             $entity = $this->create($model);
         }
 
-        return $this->repository->save($entity);
+        $this->repository->save($entity);
+
+        return $entity;
     }
 
     protected function update(EntityInterface $existentEntity, $inputEntity)
