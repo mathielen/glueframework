@@ -73,6 +73,7 @@ class ExcelReportWriteProcess
         $this->prepare();
 
         $this->currentRowNum += $this->writeRange($this->template->getNamedRange('HEADER'), $this->data);
+        $this->currentRowNum--;
 
         $this->loop($this->data['root']);
 
@@ -161,6 +162,10 @@ class ExcelReportWriteProcess
         $numItems = count($data);
         $i = 0;
         foreach ($data as $key=>$currentData) {
+            if (!is_array($currentData)) {
+                throw new \InvalidArgumentException();
+            }
+
             $currentData = array_change_key_case($currentData, CASE_LOWER);
 
             $rowsAdvanced = 0;
