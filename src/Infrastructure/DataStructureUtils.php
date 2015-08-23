@@ -8,6 +8,7 @@ class DataStructureUtils
     {
         //no data avail
         if (!array_key_exists($fieldName, $array)) { //dont use isset - we want to apply 0's
+
             return false;
         }
 

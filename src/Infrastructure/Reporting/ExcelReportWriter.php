@@ -63,11 +63,11 @@ class ExcelReportWriter implements ReportWriterInterface
         return $objReader->load($file);
     }
 
-    public function write(Report $report, $templateId)
+    public function write(array $reportData, $templateId)
     {
         $template = $this->getTemplate($templateId);
 
-        $process = new ExcelReportWriteProcess($report, $template, $this->logger);
+        $process = new ExcelReportWriteProcess($reportData, $template, $this->logger);
 
         $output = $process->run();
 

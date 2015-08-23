@@ -46,11 +46,11 @@ class ExcelReportWriteProcess
      */
     private $namedRangeNames;
 
-    public function __construct(Report $report, \PHPExcel $template, LoggerInterface $logger)
+    public function __construct(array $reportData, \PHPExcel $template, LoggerInterface $logger)
     {
         $this->logger = $logger;
         $this->template = $template;
-        $this->data = $report->getData();
+        $this->data = $reportData;
         $this->data = array_change_key_case($this->data, CASE_LOWER);
 
         if (!isset($this->data['root'])) {

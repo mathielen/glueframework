@@ -2,7 +2,6 @@
 namespace Infrastructure\Search;
 
 use JMS\Serializer\Annotation\Type;
-use Pagerfanta\PagerfantaInterface;
 
 class QueryResult
 {

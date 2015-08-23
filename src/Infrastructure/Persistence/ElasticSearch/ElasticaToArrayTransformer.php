@@ -1,8 +1,6 @@
 <?php
 namespace Infrastructure\Persistence\ElasticSearch;
 
-use FOS\ElasticaBundle\Doctrine\AbstractElasticaToModelTransformer;
-use Doctrine\ORM\Query;
 use FOS\ElasticaBundle\Transformer\ElasticaToModelTransformerInterface;
 
 class ElasticaToArrayTransformer implements ElasticaToModelTransformerInterface
@@ -18,7 +16,7 @@ class ElasticaToArrayTransformer implements ElasticaToModelTransformerInterface
      **/
     public function transform(array $elasticaObjects)
     {
-        return array_map(function(\Elastica\Result $e) { return $e->getData(); }, $elasticaObjects);
+        return array_map(function (\Elastica\Result $e) { return $e->getData(); }, $elasticaObjects);
     }
 
     public function hybridTransform(array $elasticaObjects)
