@@ -102,7 +102,7 @@ class ExcelReportWriteProcess
     {
         $footer = $this->template->getNamedRange('FOOTER');
         if ($footer) {
-            $this->writeRange($this->currentRowNum, $footer, $this->data);
+            $this->writeRange($footer, $this->data);
         }
     }
 
