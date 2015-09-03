@@ -3,6 +3,7 @@ namespace Infrastructure\Persistence\Salesforce;
 
 use Ddeboer\Salesforce\MapperBundle\Mapper;
 use Ddeboer\Salesforce\MapperBundle\Response\MappedRecordIterator;
+use Infrastructure\Persistence\PersistenceException;
 use Infrastructure\Persistence\Repository;
 
 class SalesforceRepository implements \Infrastructure\Persistence\Repository
@@ -99,8 +100,14 @@ class SalesforceRepository implements \Infrastructure\Persistence\Repository
 
     public function flush()
     {
-        $this->mapper->delete($this->deleteList);
-        $this->mapper->save($this->saveList);
+        try {
+            $deleteResults = $this->mapper->delete($this->deleteList);
+            $saveResults = $this->mapper->save($this->saveList);
+        } catch (\Exception $e) {
+            throw new PersistenceException($this->saveList, $this->entityName, $e);
+        }
+
+        return ['deleteResults' => $deleteResults, 'saveResults' => $saveResults];
     }
 
     public function getAll()
