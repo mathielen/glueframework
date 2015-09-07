@@ -25,7 +25,7 @@ class ExcelReportWriter implements ReportWriterInterface
     public function __construct(Repository $templateRepository, $saveDir, LoggerInterface $logger)
     {
         if (!is_dir($saveDir) || !is_writable($saveDir)) {
-            throw new \InvalidArgumentException("saveDir is not a writable directory! Was: ".$saveDir);
+            throw new \InvalidArgumentException("saveDir is not a writable directory! Was: " . $saveDir);
         }
 
         $this->templateRepository = $templateRepository;
@@ -35,10 +35,10 @@ class ExcelReportWriter implements ReportWriterInterface
 
     private function save(\PHPExcel $output)
     {
-        $filename = $this->saveDir.'/'.uniqid().'.xls';
+        $filename = $this->saveDir . '/' . uniqid() . '.xlsx';
         $this->logger->debug("Saving report to $filename");
 
-        $writer = new \PHPExcel_Writer_Excel5($output);
+        $writer = new \PHPExcel_Writer_Excel2007($output);
         $writer->save($filename);
 
         return $filename;

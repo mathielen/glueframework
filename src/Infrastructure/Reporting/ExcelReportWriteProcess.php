@@ -148,13 +148,40 @@ class ExcelReportWriteProcess
                 }
 
                 //set style
-                $this->outputSheet->duplicateStyle($this->templateSheet->getStyle($templateCor),$outputCor);
+                $this->setStyle($this->templateSheet->getStyle($templateCor),$outputCor);
             }
 
             $i++;
         }
 
         return $i;
+    }
+
+    /**
+     * Like PHPExcel's Duplicate Style but without checking for existing style (all styles do exist)
+     */
+    private function setStyle(\PHPExcel_Style $pCellStyle, $pRange)
+    {
+        // make sure we have a real style and not supervisor
+        $style = $pCellStyle->getIsSupervisor() ? $pCellStyle->getSharedComponent() : $pCellStyle;
+        $xfIndex = $style->getIndex();
+
+        // Calculate range outer borders
+        list($rangeStart, $rangeEnd) = \PHPExcel_Cell::rangeBoundaries($pRange . ':' . $pRange);
+
+        // Make sure we can loop upwards on rows and columns
+        if ($rangeStart[0] > $rangeEnd[0] && $rangeStart[1] > $rangeEnd[1]) {
+            $tmp = $rangeStart;
+            $rangeStart = $rangeEnd;
+            $rangeEnd = $tmp;
+        }
+
+        // Loop through cells and apply styles
+        for ($col = $rangeStart[0]; $col <= $rangeEnd[0]; ++$col) {
+            for ($row = $rangeStart[1]; $row <= $rangeEnd[1]; ++$row) {
+                $this->outputSheet->getCell(\PHPExcel_Cell::stringFromColumnIndex($col - 1) . $row)->setXfIndex($xfIndex);
+            }
+        }
     }
 
     private function loop(array $data, \PHPExcel_NamedRange $namedRange=null)

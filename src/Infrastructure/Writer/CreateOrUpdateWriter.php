@@ -5,7 +5,6 @@ use Infrastructure\Exception\ResourceNotFoundException;
 use Infrastructure\Persistence\EntityInterface;
 use Infrastructure\Persistence\Factory;
 use Infrastructure\Persistence\IdentityResolverInterface;
-use Infrastructure\Persistence\MergeableEntityInterface;
 use Infrastructure\Persistence\MergeableInterface;
 use Infrastructure\Persistence\Repository;
 use Psr\Log\LoggerInterface;
