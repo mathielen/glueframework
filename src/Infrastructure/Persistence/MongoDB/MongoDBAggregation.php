@@ -45,11 +45,6 @@ class MongoDBAggregation
      */
     public function query($collectionName, array $query)
     {
-        //TODO check if DB and collection exists
-        if (!in_array($collectionName, ['OrderPosition', 'Order', 'Stock', 'Customer'])) {
-            throw new ResourceNotFoundException('Collection', $collectionName);
-        }
-
         $collection = $this->getMongoClient()->selectDB('reporting_portal')->selectCollection($collectionName);
 
         $ms = microtime(true);
