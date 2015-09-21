@@ -72,12 +72,10 @@ class MongoDBRepository implements \Infrastructure\Persistence\Repository
         }
 
         $object = $this->get($id);
-        if (!$object) {
-            throw new ResourceNotFoundException($this->entityName, $id);
+        if ($object) {
+            $this->documentManager->remove($object);
+            $this->documentManager->flush();
         }
-
-        $this->documentManager->remove($object);
-        $this->documentManager->flush();
     }
 
 }
