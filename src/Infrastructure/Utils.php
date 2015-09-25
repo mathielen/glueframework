@@ -8,12 +8,27 @@ class Utils
     {
         $retVal = '';
 
-        foreach ($array as $cKey=>$cValue) {
-            $retVal .= $cKey.$keyvalue_seperator.$cValue.$separator;
+        foreach ($array as $cKey => $cValue) {
+            $retVal .= $cKey . $keyvalue_seperator . $cValue . $separator;
         }
-        $retVal = substr($retVal, 0, strlen($retVal)-strlen($separator));
+        $retVal = substr($retVal, 0, strlen($retVal) - strlen($separator));
 
         return $retVal;
+    }
+
+    /**
+     * recusive join
+     */
+    public static function joinr($delim, $value)
+    {
+        $cpy = array();
+        foreach ($value as $val) {
+            if (is_array($delim))
+                $d = count($delim) > 1 ? array_slice($delim, 1) : $delim[0];
+            else $d = $delim;
+            $cpy[] = is_array($val) ? self::joinr($d, $val) : $val;
+        }
+        return join(is_array($delim) ? $delim[0] : $delim, $cpy);
     }
 
     public static function jsonDecode($json)
@@ -52,7 +67,7 @@ class Utils
     public static function postToObject($postVariables)
     {
         $request = new \stdClass();
-        foreach ($postVariables as $key=>$value) {
+        foreach ($postVariables as $key => $value) {
             if (empty($value)) {
                 continue;
             }
@@ -112,7 +127,7 @@ class Utils
 
         $currentRange = [];
         foreach ($numbers as $number) {
-            if (!empty($currentRange) && current($currentRange) !== $number-1) {
+            if (!empty($currentRange) && current($currentRange) !== $number - 1) {
                 self::addRangeText($ranges, $currentRange);
 
                 $currentRange = [];
