@@ -39,7 +39,7 @@ class FlushList extends \ArrayObject
     {
         parent::offsetSet($index, $newval);
 
-        if ($this->count() == $this->chunkSize) {
+        if ($this->count() === $this->chunkSize) {
             $this->flush();
         }
     }
