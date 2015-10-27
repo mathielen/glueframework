@@ -1,7 +1,6 @@
 <?php
 namespace Infrastructure\Persistence\MongoDB;
 
-use Infrastructure\Exception\ResourceNotFoundException;
 use Doctrine\ODM\MongoDB\DocumentManager;
 
 class MongoDBRepository implements \Infrastructure\Persistence\Repository

@@ -1,7 +1,6 @@
 <?php
 namespace Infrastructure\Google;
 
-
 use Assert\Assertion;
 
 class Configurator

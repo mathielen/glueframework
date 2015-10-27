@@ -33,9 +33,9 @@ class ExcelReportWriter implements ReportWriterInterface
         $this->logger = $logger;
     }
 
-    private function save(\PHPExcel $output)
+    private function save(\PHPExcel $output, $id)
     {
-        $filename = $this->saveDir . '/' . uniqid() . '.xlsx';
+        $filename = $this->saveDir . '/' . $id . '.xlsx';
         $this->logger->debug("Saving report to $filename");
 
         $writer = new \PHPExcel_Writer_Excel2007($output);
@@ -63,15 +63,17 @@ class ExcelReportWriter implements ReportWriterInterface
         return $objReader->load($file);
     }
 
-    public function write(array $reportData, $templateId)
+    public function write(array $reportData, $templateId, $id = null)
     {
+        $id = is_null($id)?uniqid():$id;
+
         $template = $this->getTemplate($templateId);
 
         $process = new ExcelReportWriteProcess($reportData, $template, $this->logger);
 
         $output = $process->run();
 
-        return $this->save($output);
+        return $this->save($output, $id);
     }
 
 }

@@ -28,6 +28,7 @@ class Utils
             else $d = $delim;
             $cpy[] = is_array($val) ? self::joinr($d, $val) : $val;
         }
+
         return join(is_array($delim) ? $delim[0] : $delim, $cpy);
     }
 

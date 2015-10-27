@@ -4,6 +4,6 @@ namespace Infrastructure\Reporting;
 interface ReportWriterInterface
 {
 
-    public function write(array $reportData, $templateId);
+    public function write(array $reportData, $templateId, $id = null);
 
 }
