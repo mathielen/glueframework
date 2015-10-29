@@ -113,7 +113,7 @@ class SalesforceRepository implements \Infrastructure\Persistence\Repository
     public function getAll()
     {
         if (is_null($this->modelList)) {
-            foreach ($this->mapper->findAll($this->entityName) as $model) {
+            foreach ($this->mapper->findAll($this->entityName, [], 0) as $model) {
                 $this->modelList[$model->getId()] = $model;
             }
         }
