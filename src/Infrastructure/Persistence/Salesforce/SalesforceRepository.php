@@ -12,18 +12,18 @@ class SalesforceRepository implements \Infrastructure\Persistence\Repository
     /**
      * @var Mapper
      */
-    private $mapper;
+    protected $mapper;
 
-    private $entityName;
-    private $strategy;
+    protected $entityName;
+    protected $strategy;
 
     /**
      * @var MappedRecordIterator
      */
-    private $modelList = null;
+    protected $modelList = null;
 
-    private $deleteList = [];
-    private $saveList = [];
+    protected $deleteList = [];
+    protected $saveList = [];
 
     public function __construct(
         Mapper $mapper,
