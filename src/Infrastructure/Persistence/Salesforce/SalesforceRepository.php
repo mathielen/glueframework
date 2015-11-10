@@ -107,7 +107,12 @@ class SalesforceRepository implements \Infrastructure\Persistence\Repository
             $this->deleteList = [];
             $this->saveList = [];
         } catch (\Exception $e) {
-            throw new PersistenceException($this->saveList, $this->entityName, $e);
+            $e = new PersistenceException($this->saveList, $this->entityName, $e);
+
+            $this->deleteList = [];
+            $this->saveList = [];
+
+            throw $e;
         }
 
         return ['deleteResults' => $deleteResults, 'saveResults' => $saveResults];
