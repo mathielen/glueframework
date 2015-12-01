@@ -4,6 +4,23 @@ namespace Infrastructure;
 class Utils
 {
 
+    /**
+     * @return array
+     */
+    public static function explodeArray(array $input, $separator='=', $defaultValue=true)
+    {
+        $values = [];
+        foreach ($input as $item) {
+            @list ($k, $v) = explode('=', $item);
+            $values[$k] = $v?$v:$defaultValue;
+        }
+
+        return $values;
+    }
+
+    /**
+     * @return string
+     */
     public static function joinWithKey($separator, $keyvalue_seperator, array $array)
     {
         $retVal = '';

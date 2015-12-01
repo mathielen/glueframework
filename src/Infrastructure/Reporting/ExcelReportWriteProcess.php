@@ -91,7 +91,7 @@ class ExcelReportWriteProcess
         $this->outputSheet->setTitle('Report');
         $this->templateSheet = $this->output->addExternalSheet($this->template->getSheetByName('TEMPLATE'));
 
-        foreach ($this->templateSheet->getColumnDimensions() as $col=>$columnDimension) {
+        foreach ($this->templateSheet->getColumnDimensions() as $col => $columnDimension) {
             $this->outputSheet->getColumnDimension($col)->setWidth($columnDimension->getWidth());
         }
 
@@ -115,15 +115,15 @@ class ExcelReportWriteProcess
     /**
      * @return int
      */
-    private function writeRange(\PHPExcel_NamedRange $namedRange, array $currentData=[])
+    private function writeRange(\PHPExcel_NamedRange $namedRange, array $currentData = [])
     {
         $rangeData = $this->templateSheet->rangeToArray($namedRange->getRange(), null, false, true, true);
 
         $i = 0;
         foreach ($rangeData as $rangeRowNum => $rangeCols) {
             foreach ($rangeCols as $rangeColNum => $rangeCellValue) {
-                $templateCor = $rangeColNum.$rangeRowNum; //A1...
-                $outputCor = $rangeColNum.($this->currentRowNum+$i); //A1...
+                $templateCor = $rangeColNum . $rangeRowNum; //A1...
+                $outputCor = $rangeColNum . ($this->currentRowNum + $i); //A1...
 
                 if (!empty($rangeCellValue)) {
                     $cellValue = empty($currentData) ? $rangeCellValue : $this->translate($rangeCellValue, $currentData);
@@ -148,7 +148,7 @@ class ExcelReportWriteProcess
                 }
 
                 //set style
-                $this->setStyle($this->templateSheet->getStyle($templateCor),$outputCor);
+                $this->setStyle($this->templateSheet->getStyle($templateCor), $outputCor);
             }
 
             $i++;
@@ -184,11 +184,11 @@ class ExcelReportWriteProcess
         }
     }
 
-    private function loop(array $data, \PHPExcel_NamedRange $namedRange=null)
+    private function loop(array $data, \PHPExcel_NamedRange $namedRange = null)
     {
         $numItems = count($data);
         $i = 0;
-        foreach ($data as $key=>$currentData) {
+        foreach ($data as $key => $currentData) {
             if (!is_array($currentData)) {
                 throw new \InvalidArgumentException();
             }
@@ -196,7 +196,9 @@ class ExcelReportWriteProcess
             $currentData = array_change_key_case($currentData, CASE_LOWER);
 
             $rowsAdvanced = 0;
+            $rangeHeight = 0;
             if ($namedRange) {
+                $rangeHeight = $this->calculateRangeHeight($namedRange->getRange());
                 $rowsAdvanced = $this->writeRange($namedRange, $currentData);
             }
 
@@ -205,6 +207,7 @@ class ExcelReportWriteProcess
             if (count($recursionProperties) > 0) {
                 $this->logger->debug("Recursing properties", $recursionProperties);
 
+                $highestOffset = 0;
                 foreach ($recursionProperties as $property) {
                     $subData = $currentData[$property];
                     $nr = $this->template->getNamedRange(strtoupper($property));
@@ -216,8 +219,23 @@ class ExcelReportWriteProcess
                         $offset = 1;
                     }
 
+                    $highestOffset = max($highestOffset, $offset);
                     $this->currentRowNum += $offset;
                     $this->loop($subData, $nr);
+                }
+
+                $footerHeight = $rangeHeight - $highestOffset - 1;
+                if ($footerHeight > 0) {
+                    $this->currentRowNum++;
+
+                    $namedRangeBottomCoordinate = $this->getBottomCoordinate($namedRange->getRange());
+                    $footerStartY = $namedRangeBottomCoordinate - $footerHeight + 1;
+                    $footerRange = preg_replace('/([A-Z]+)[0-9]+:([A-Z]+)[0-9]+/', '${1}' . $footerStartY . ':${2}' . $namedRangeBottomCoordinate, $namedRange->getRange());
+
+                    $footerNamedRange = clone $namedRange;
+                    $footerNamedRange->setRange($footerRange);
+                    $this->writeRange($footerNamedRange, $currentData);
+                    $rowsAdvanced -= $footerHeight+1;
                 }
             }
 
@@ -227,12 +245,26 @@ class ExcelReportWriteProcess
         }
     }
 
+    private function getBottomCoordinate($range)
+    {
+        preg_match('/[A-Z]+[0-9]+:[A-Z]+([0-9]+)/', $range, $matches);
+
+        return $matches[1];
+    }
+
+    private function calculateRangeHeight($range)
+    {
+        preg_match('/[A-Z]+([0-9]+):[A-Z]+([0-9]+)/', $range, $matches);
+
+        return $matches[2] - $matches[1] + 1;
+    }
+
     private function calculateRangeYOffset($range1, $range2)
     {
         preg_match('/([A-Z]+)([0-9])+:/', $range1, $matches1);
         preg_match('/([A-Z]+)([0-9])+:/', $range2, $matches2);
 
-        return $matches2[2]-$matches1[2];
+        return $matches2[2] - $matches1[2];
     }
 
     private function getRecursionProperties($currentData)
@@ -259,7 +291,7 @@ class ExcelReportWriteProcess
 
             $propertyPath = strtolower(Inflector::camelize(strtolower($property)));
 
-            return isset($data[$propertyPath])?$data[$propertyPath]:null;
+            return isset($data[$propertyPath]) ? $data[$propertyPath] : null;
         }, $templateValue);
 
         $this->logger->debug("Translated '$templateValue' to '$translated'");
