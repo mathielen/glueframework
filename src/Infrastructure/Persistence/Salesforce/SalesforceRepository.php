@@ -35,11 +35,6 @@ class SalesforceRepository implements \Infrastructure\Persistence\Repository
         $this->strategy = $strategy;
     }
 
-    private function modelList()
-    {
-
-    }
-
     /**
      * (non-PHPdoc)
      * @see \Infrastructure\Persistence\Repository::getConnection()
