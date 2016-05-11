@@ -1,9 +1,9 @@
 <?php
+
 namespace Infrastructure\Serialization\Serializer;
 
 class PhpSerializer implements SerializerInterface
 {
-
     public function getHttpContentType()
     {
         return 'text/plain';
@@ -19,10 +19,9 @@ class PhpSerializer implements SerializerInterface
         $object = @unserialize($value);
 
         if (!$object) {
-            throw new Api_Exception_BadRequest($value. ' could not be decoded!');
+            throw new Api_Exception_BadRequest($value.' could not be decoded!');
         }
 
         return $object;
     }
-
 }

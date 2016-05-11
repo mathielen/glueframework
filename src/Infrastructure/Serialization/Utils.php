@@ -1,11 +1,11 @@
 <?php
+
 namespace Infrastructure\Serialization;
 
 class Utils
 {
-
     /**
-     * casts a stdClass object to a definied object
+     * casts a stdClass object to a definied object.
      */
     public static function recursiveCastToObject($stdClassObject, $className)
     {
@@ -32,7 +32,7 @@ class Utils
 
                 $ns = $reflectionClass->getNamespaceName();
                 list(, $type) = $matches;
-                $type = $ns . (!empty($ns)?'\\':'') . $type;
+                $type = $ns.(!empty($ns) ? '\\' : '').$type;
 
                 //cast properties that are array of class typed
                 if (substr($type, -2, 2) == '[]') {
@@ -40,7 +40,7 @@ class Utils
 
                     if (@class_exists($singularType)) {
                         $typedArray = array();
-                        foreach ($propertyValue as $key=>$singlePropertyValue) {
+                        foreach ($propertyValue as $key => $singlePropertyValue) {
                             $typedArray[$key] =
                                 self::recursiveCastToObject(
                                     (object) $singlePropertyValue,
@@ -60,7 +60,6 @@ class Utils
                             $type));
                 }
             }
-
         }
 
         return $object;
@@ -89,5 +88,4 @@ class Utils
                     substr(serialize($stdClassObject), 14)
                 ));
     }
-
 }

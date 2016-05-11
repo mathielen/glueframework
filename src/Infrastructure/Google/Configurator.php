@@ -1,11 +1,11 @@
 <?php
+
 namespace Infrastructure\Google;
 
 use Assert\Assertion;
 
 class Configurator
 {
-
     private $serviceEmail;
     private $key;
 
@@ -32,5 +32,4 @@ class Configurator
             $client->getAuth()->refreshTokenWithAssertion($cred);
         }
     }
-
 }

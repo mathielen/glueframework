@@ -1,11 +1,11 @@
 <?php
+
 namespace Infrastructure\Search;
 
 use JMS\Serializer\Annotation\Type;
 
 class QueryResult
 {
-
     /**
      * @Type("array")
      */
@@ -19,11 +19,11 @@ class QueryResult
     /**
      * @return QueryResult
      */
-    public static function fromDataset($data, $total=null)
+    public static function fromDataset($data, $total = null)
     {
         return new self(
             $data,
-            array('total' => is_null($total)?count($data):$total)
+            array('total' => is_null($total) ? count($data) : $total)
         );
     }
 
@@ -32,5 +32,4 @@ class QueryResult
         $this->data = $data;
         $this->metadata = $metadata;
     }
-
 }

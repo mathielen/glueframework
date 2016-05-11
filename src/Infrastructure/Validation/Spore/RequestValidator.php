@@ -1,13 +1,13 @@
 <?php
+
 namespace Infrastructure\Validation\Spore;
 
 use Infrastructure\Validation\ValidationException;
 
 class RequestValidator implements RequestValidatorInterface
 {
-
     /**
-     * contenttype => validator
+     * contenttype => validator.
      *
      * @var ValidatorInterface[]
      */
@@ -19,7 +19,8 @@ class RequestValidator implements RequestValidatorInterface
     }
 
     /**
-     * (non-PHPdoc)
+     * (non-PHPdoc).
+     *
      * @see \Infrastructure\Validation\Spore\RequestValidatorInterface::validate()
      */
     public function validate(\Spore\ReST\Model\Request $request)
@@ -38,5 +39,4 @@ class RequestValidator implements RequestValidatorInterface
 
         return $this->validators[$contentType]->validate($requestBody);
     }
-
 }

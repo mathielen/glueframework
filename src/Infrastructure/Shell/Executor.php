@@ -1,13 +1,12 @@
 <?php
+
 namespace Infrastructure\Shell;
 
 use Symfony\Component\Process\ProcessBuilder;
-
 use Symfony\Component\Process\Process;
 
 class Executor
 {
-
     private $cmd;
     private $timeout;
 
@@ -43,5 +42,4 @@ class Executor
 
         throw new ExecutorException('Process did not return successfully', $result);
     }
-
 }

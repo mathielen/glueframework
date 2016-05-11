@@ -1,9 +1,9 @@
 <?php
+
 namespace Infrastructure\Serialization\Serializer;
 
 class JsonSerializer implements SerializerInterface
 {
-
     public function getHttpContentType()
     {
         return 'application/json';
@@ -12,7 +12,7 @@ class JsonSerializer implements SerializerInterface
     public function serialize($value)
     {
         if (empty($value)) {
-            return null;
+            return;
         }
         $this->decorateCls($value);
         @$json = json_encode($value);
@@ -42,12 +42,12 @@ class JsonSerializer implements SerializerInterface
     public function unserialize($value)
     {
         if (empty($value)) {
-            return null;
+            return;
         }
         $object = json_decode($value);
 
         if ($object === null) {
-            throw new SerializationException($value. ' could not be decoded!');
+            throw new SerializationException($value.' could not be decoded!');
         }
 
         $this->castRecursiveToObject($object);
@@ -71,10 +71,9 @@ class JsonSerializer implements SerializerInterface
             $this->castRecursiveToObject($value);
         }
 
-         $className = $object->cls;
+        $className = $object->cls;
         unset($object->cls);
 
         $object = Utils::recursiveCastToObject($object, $className);
     }
-
 }

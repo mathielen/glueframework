@@ -1,13 +1,12 @@
 <?php
+
 namespace Infrastructure\Spore;
 
 use Monolog\Logger;
-
 use Slim\Middleware;
 
 class RequestLoggerMiddleware extends Middleware
 {
-
     /**
      * @var Logger
      */
@@ -36,5 +35,4 @@ class RequestLoggerMiddleware extends Middleware
 
         $this->next->call();
     }
-
 }

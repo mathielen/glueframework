@@ -1,7 +1,7 @@
 <?php
+
 class Infrastructure_Serialization_Registry
 {
-
     const DEFAULT_CONTENTTYPE = 'application/xml';
 
     private $serializers;
@@ -29,5 +29,4 @@ class Infrastructure_Serialization_Registry
 
         return $this->serializers[$contentType];
     }
-
 }

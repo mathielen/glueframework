@@ -1,4 +1,5 @@
 <?php
+
 namespace Infrastructure\Reader;
 
 use Infrastructure\Search\Dto\FilterInterface;
@@ -7,7 +8,6 @@ use Infrastructure\Search\Dto\Query;
 
 class SimpleReader
 {
-
     /**
      * @var Finder
      */
@@ -35,7 +35,7 @@ class SimpleReader
         $objects = $this->finder->search($query);
 
         if (count($objects) == 0) {
-            return null;
+            return;
         }
 
         return $objects[0];
@@ -48,5 +48,4 @@ class SimpleReader
 
         return $data;
     }
-
 }

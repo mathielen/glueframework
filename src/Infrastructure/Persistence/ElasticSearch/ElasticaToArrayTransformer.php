@@ -1,11 +1,11 @@
 <?php
+
 namespace Infrastructure\Persistence\ElasticSearch;
 
 use FOS\ElasticaBundle\Transformer\ElasticaToModelTransformerInterface;
 
 class ElasticaToArrayTransformer implements ElasticaToModelTransformerInterface
 {
-
     /**
      * Transforms an array of elastica objects into an array of
      * model objects fetched from the doctrine repository.
@@ -31,7 +31,7 @@ class ElasticaToArrayTransformer implements ElasticaToModelTransformerInterface
      */
     public function getObjectClass()
     {
-        return null;
+        return;
     }
 
     /**

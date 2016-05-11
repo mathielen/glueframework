@@ -1,4 +1,5 @@
 <?php
+
 namespace Infrastructure\Persistence\File;
 
 use Infrastructure\Exception\NotImplementedException;
@@ -7,7 +8,6 @@ use Symfony\Component\Finder\Finder;
 
 class FileRepository implements Repository
 {
-
     /**
      * @var Finder
      */
@@ -42,12 +42,11 @@ class FileRepository implements Repository
             }
         }
 
-        return null;
+        return;
     }
 
     public function delete($id)
     {
         throw new NotImplementedException();
     }
-
 }

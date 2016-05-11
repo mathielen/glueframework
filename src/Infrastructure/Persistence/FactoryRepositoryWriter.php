@@ -1,9 +1,9 @@
 <?php
+
 namespace Infrastructure\Persistence;
 
 class FactoryRepositoryWriter
 {
-
     /**
      * @var Repository
      */
@@ -32,5 +32,4 @@ class FactoryRepositoryWriter
 
         return $object;
     }
-
 }

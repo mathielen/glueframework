@@ -1,11 +1,11 @@
 <?php
+
 namespace Infrastructure\Search\Dto;
 
 use Infrastructure\Search\SearchException;
 
 class Query
 {
-
     const SORT_ASCENDING = 'asc';
     const SORT_DESCENDING = 'desc';
 
@@ -21,7 +21,7 @@ class Query
     public $resultCacheId;
     public $facets;
 
-    public function __construct($fields = array(), $limit=null)
+    public function __construct($fields = array(), $limit = null)
     {
         $this->fields = $fields;
         $this->limit = $limit;
@@ -33,5 +33,4 @@ class Query
             throw new SearchException('Sortdirection can only be desc or asc. Given: '.$this->sortDirection);
         }
     }
-
 }

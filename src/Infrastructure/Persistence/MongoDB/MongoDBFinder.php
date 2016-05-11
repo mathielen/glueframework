@@ -1,4 +1,5 @@
 <?php
+
 namespace Infrastructure\Persistence\MongoDB;
 
 use Infrastructure\Search\Dto\Query;
@@ -7,7 +8,6 @@ use Doctrine\ODM\MongoDB\DocumentRepository;
 
 class MongoDBFinder implements \Infrastructure\Search\Finder
 {
-
     /**
      * @var DocumentRepository
      */
@@ -24,7 +24,7 @@ class MongoDBFinder implements \Infrastructure\Search\Finder
 
         if ($query && count($query->fields) > 0) {
             $i = 0;
-            foreach ($query->fields as $where=>$value) {
+            foreach ($query->fields as $where => $value) {
                 if (empty($value)) {
                     $qb->field($where)->exists(false);
                 } else {
@@ -56,6 +56,7 @@ class MongoDBFinder implements \Infrastructure\Search\Finder
         }
 
         $q = $qb->getQuery();
+
         if ($query && $query->paginated && !empty($query->limit)) {
             $result = new Paginator($q, true);
         } else {
@@ -64,5 +65,4 @@ class MongoDBFinder implements \Infrastructure\Search\Finder
 
         return array_values($result->toArray()); //TODO unified result class?
     }
-
 }

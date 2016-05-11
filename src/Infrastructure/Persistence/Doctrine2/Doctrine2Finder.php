@@ -1,16 +1,14 @@
 <?php
+
 namespace Infrastructure\Persistence\Doctrine2;
 
 use Infrastructure\Persistence\Doctrine2\Search\DqlQuery;
-
 use Infrastructure\Search\Dto\Query;
-
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class Doctrine2Finder implements \Infrastructure\Search\Finder
 {
-
     /**
      * @var EntityRepository
      */
@@ -26,7 +24,7 @@ class Doctrine2Finder implements \Infrastructure\Search\Finder
         $qb = $this->doctrineEntityRepository->createQueryBuilder('table');
 
         if ($query instanceof DqlQuery && !empty($query->dql)) {
-            $dql = $qb->getDQL() . ' ' . $query->dql;
+            $dql = $qb->getDQL().' '.$query->dql;
 
             //TODO a hack! what about HAVING etc?
             if (!empty($query->sortField)) {
@@ -35,10 +33,9 @@ class Doctrine2Finder implements \Infrastructure\Search\Finder
 
             $q = $qb->getEntityManager()->createQuery($dql);
             $q->setParameters($query->dqldata);
-
         } elseif ($query && count($query->fields) > 0) {
             $i = 0;
-            foreach ($query->fields as $where=>$value) {
+            foreach ($query->fields as $where => $value) {
                 if (empty($value)) {
                     $qb->andWhere("table.$where IS NULL");
                 } else {
@@ -77,5 +74,4 @@ class Doctrine2Finder implements \Infrastructure\Search\Finder
 
         return $result;
     }
-
 }

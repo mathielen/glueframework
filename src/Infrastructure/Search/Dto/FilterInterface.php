@@ -1,9 +1,9 @@
 <?php
+
 namespace Infrastructure\Search\Dto;
 
 interface FilterInterface
 {
-
     /**
      * @return array
      */
@@ -13,5 +13,4 @@ interface FilterInterface
      * @return Query
      */
     public function toQuery();
-
 }

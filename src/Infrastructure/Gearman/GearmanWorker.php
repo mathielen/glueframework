@@ -1,11 +1,11 @@
 <?php
+
 namespace Infrastructure\Gearman;
 
 use Monolog\Logger;
 
 class GearmanWorker
 {
-
     /**
      * @var \GearmanWorker
      */
@@ -16,7 +16,7 @@ class GearmanWorker
      */
     private $logger;
 
-    public function __construct($servers, Logger $logger=null)
+    public function __construct($servers, Logger $logger = null)
     {
         $this->gearmanWorker = $this->factorGearmanWorker($servers);
         $this->logger = $logger;
@@ -41,9 +41,9 @@ class GearmanWorker
         while ($this->gearmanWorker->work()) {
             if (GEARMAN_SUCCESS != $this->gearmanWorker->returnCode()) {
                 if ($this->logger) {
-                    $this->logger->addError("Worker failed: " . $this->gearmanWorker->error());
+                    $this->logger->addError('Worker failed: '.$this->gearmanWorker->error());
                 } else {
-                    echo "Worker failed: " . $this->gearmanWorker->error()."\n";
+                    echo 'Worker failed: '.$this->gearmanWorker->error()."\n";
                 }
             }
         }
@@ -72,5 +72,4 @@ class GearmanWorker
             return $result;
         });
     }
-
 }

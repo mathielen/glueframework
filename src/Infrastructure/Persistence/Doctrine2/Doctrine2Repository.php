@@ -1,4 +1,5 @@
 <?php
+
 namespace Infrastructure\Persistence\Doctrine2;
 
 use Doctrine\ORM\EntityManager;
@@ -6,7 +7,6 @@ use Infrastructure\Exception\ResourceNotFoundException;
 
 class Doctrine2Repository implements \Infrastructure\Persistence\Repository
 {
-
     /**
      * @var EntityManager
      */
@@ -23,7 +23,8 @@ class Doctrine2Repository implements \Infrastructure\Persistence\Repository
     }
 
     /**
-     * (non-PHPdoc)
+     * (non-PHPdoc).
+     *
      * @see \Infrastructure\Persistence\Repository::getConnection()
      */
     public function getConnection()
@@ -32,7 +33,8 @@ class Doctrine2Repository implements \Infrastructure\Persistence\Repository
     }
 
     /**
-     * (non-PHPdoc)
+     * (non-PHPdoc).
+     *
      * @see \Infrastructure\Persistence\Repository::save()
      */
     public function save($object)
@@ -42,7 +44,8 @@ class Doctrine2Repository implements \Infrastructure\Persistence\Repository
     }
 
     /**
-     * (non-PHPdoc)
+     * (non-PHPdoc).
+     *
      * @see \Infrastructure\Persistence\Repository::get()
      */
     public function get($id)
@@ -55,7 +58,8 @@ class Doctrine2Repository implements \Infrastructure\Persistence\Repository
     }
 
     /**
-     * (non-PHPdoc)
+     * (non-PHPdoc).
+     *
      * @see \Infrastructure\Persistence\Repository::delete()
      */
     public function delete($id)
@@ -72,5 +76,4 @@ class Doctrine2Repository implements \Infrastructure\Persistence\Repository
         $this->entityManager->remove($object);
         $this->entityManager->flush();
     }
-
 }

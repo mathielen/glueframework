@@ -1,12 +1,13 @@
 <?php
+
 namespace Infrastructure\Persistence;
 
 interface MergeableInterface
 {
-
     /**
-     * @param  MergeableInterface $entity
-     * @return boolean
+     * @param MergeableInterface $entity
+     *
+     * @return bool
      */
     public function merge(MergeableInterface $entity);
 
@@ -14,5 +15,4 @@ interface MergeableInterface
      * @return array
      */
     public function getMergeValues();
-
 }

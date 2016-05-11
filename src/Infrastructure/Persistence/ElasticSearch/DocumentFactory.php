@@ -1,13 +1,11 @@
 <?php
+
 namespace Infrastructure\Persistence\ElasticSearch;
 
 use Infrastructure\Serialization\Utils;
 
-use Infrastructure\Persistence\Entity;
-
 class DocumentFactory
 {
-
     /**
      * @return \Elastica_Document
      */
@@ -22,7 +20,7 @@ class DocumentFactory
     public function fromElasticSearchDocument(\Elastica_Document $document)
     {
         $stdClassObject = new \stdClass();
-        foreach ($document->getData() as $key=>$value) {
+        foreach ($document->getData() as $key => $value) {
             $stdClassObject->$key = $value;
         }
 
@@ -30,5 +28,4 @@ class DocumentFactory
 
         return $object;
     }
-
 }

@@ -1,9 +1,9 @@
 <?php
+
 namespace Infrastructure\Serialization\Serializer;
 
 class XmlSerializer implements SerializerInterface
 {
-
     private $targetNamespace;
 
     public function __construct($targetNamespace = null)
@@ -44,7 +44,7 @@ class XmlSerializer implements SerializerInterface
     {
         foreach ($arr as $k => $v) {
             $k = (is_numeric($k)) ? 'item' : $k;
-            $v = (is_object($v)) ? (array) $v: $v;
+            $v = (is_object($v)) ? (array) $v : $v;
 
             //replace special chars that would break xml
             $k = preg_replace('/[^a-zA-Z0-9_ %\[\]\.\(\)%&-]/s', '', $k);
@@ -57,7 +57,7 @@ class XmlSerializer implements SerializerInterface
         return $xml;
     }
 
-    public static function xmlToArray(\SimpleXMLElement $xmlObject, $removeEmptyNodes = false, $targetNamespace=null)
+    public static function xmlToArray(\SimpleXMLElement $xmlObject, $removeEmptyNodes = false, $targetNamespace = null)
     {
         $config = array();
 
@@ -91,5 +91,4 @@ class XmlSerializer implements SerializerInterface
 
         return $config;
     }
-
 }

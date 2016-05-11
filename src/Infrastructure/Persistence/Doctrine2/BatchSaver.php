@@ -1,11 +1,11 @@
 <?php
+
 namespace Infrastructure\Persistence\Doctrine2;
 
 use Doctrine\ORM\EntityManager;
 
 class BatchSaver
 {
-
     /**
      * @var EntityManager
      */
@@ -29,7 +29,7 @@ class BatchSaver
         $this->process($list, true);
     }
 
-    private function process(\Traversable $list, $replace=false)
+    private function process(\Traversable $list, $replace = false)
     {
         if ($replace) {
             $q = $this->entityManager->createQuery('delete from '.get_class($list[0]));
@@ -63,5 +63,4 @@ class BatchSaver
         $this->entityManager->commit();
         $this->entityManager->clear();
     }
-
 }

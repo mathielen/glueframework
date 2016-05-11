@@ -1,27 +1,29 @@
 <?php
+
 namespace Infrastructure\Persistence\Memory;
 
 use Infrastructure\Persistence\Repository;
 
 class MemoryRepository implements Repository
 {
-
     /**
      * @var array
      */
     private $storage = array();
 
     /**
-     * (non-PHPdoc)
+     * (non-PHPdoc).
+     *
      * @see \Infrastructure\Persistence\Repository::getConnection()
      */
     public function getConnection()
     {
-        return null;
+        return;
     }
 
     /**
-     * (non-PHPdoc)
+     * (non-PHPdoc).
+     *
      * @see \Infrastructure\Persistence\Repository::save()
      */
     public function save($object)
@@ -30,7 +32,8 @@ class MemoryRepository implements Repository
     }
 
     /**
-     * (non-PHPdoc)
+     * (non-PHPdoc).
+     *
      * @see \Infrastructure\Persistence\Repository::get()
      */
     public function get($id)
@@ -39,12 +42,12 @@ class MemoryRepository implements Repository
     }
 
     /**
-     * (non-PHPdoc)
+     * (non-PHPdoc).
+     *
      * @see \Infrastructure\Persistence\Repository::delete()
      */
     public function delete($id)
     {
         unset($this->storage[$id]);
     }
-
 }

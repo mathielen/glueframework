@@ -1,4 +1,5 @@
 <?php
+
 namespace Infrastructure\Writer;
 
 use Infrastructure\Exception\ResourceNotFoundException;
@@ -11,7 +12,6 @@ use Psr\Log\LoggerInterface;
 
 class CreateOrUpdateWriter
 {
-
     /**
      * @var Repository
      */
@@ -34,9 +34,9 @@ class CreateOrUpdateWriter
 
     public function __construct(
         Repository $repository,
-        Factory $factory=null,
-        IdentityResolverInterface $idResolver=null,
-        LoggerInterface $logger=null)
+        Factory $factory = null,
+        IdentityResolverInterface $idResolver = null,
+        LoggerInterface $logger = null)
     {
         $this->repository = $repository;
         $this->factory = $factory;
@@ -60,7 +60,7 @@ class CreateOrUpdateWriter
             return $this->idResolver->resolveByModel($model);
         }
 
-        throw new \LogicException("Cannot resolve Id");
+        throw new \LogicException('Cannot resolve Id');
     }
 
     /**
@@ -71,7 +71,7 @@ class CreateOrUpdateWriter
         $id = $this->getId($model);
 
         if ($id) {
-            $this->logger?$this->logger->debug("Resolved id from model: '$id'", ['model'=>$model]):null;
+            $this->logger ? $this->logger->debug("Resolved id from model: '$id'", ['model' => $model]) : null;
 
             $entity = $this->repository->get($id);
             if (!$entity) {
@@ -79,7 +79,7 @@ class CreateOrUpdateWriter
             }
 
             if (!$this->update($entity, $model)) {
-                $this->logger?$this->logger->notice("Entity was not updated. Entity did not implemenet MergeableInterface or merge implementation returned false." , ['model'=>$model]):null;
+                $this->logger ? $this->logger->notice('Entity was not updated. Entity did not implemenet MergeableInterface or merge implementation returned false.', ['model' => $model]) : null;
 
                 //do not save, if no update
                 return $entity;
@@ -87,7 +87,7 @@ class CreateOrUpdateWriter
         } else {
             $entity = $this->create($model);
 
-            $this->logger?$this->logger->debug("Created new entity from model", ['model'=>$model, 'entity'=>$entity]):null;
+            $this->logger ? $this->logger->debug('Created new entity from model', ['model' => $model, 'entity' => $entity]) : null;
         }
 
         $this->repository->save($entity);
@@ -114,5 +114,4 @@ class CreateOrUpdateWriter
 
         return $entity;
     }
-
 }

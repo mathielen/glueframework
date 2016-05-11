@@ -1,10 +1,11 @@
 <?php
+
 namespace Infrastructure\Persistence\ElasticSearch;
 
 use Elastica\Exception\NotFoundException;
+
 class BatchSaver
 {
-
     /**
      * @var \Elastica\Type
      */
@@ -28,7 +29,7 @@ class BatchSaver
         $this->process($list, true);
     }
 
-    private function process(\Traversable $list, $replace=false)
+    private function process(\Traversable $list, $replace = false)
     {
         $this->chunkBegin();
 
@@ -40,7 +41,8 @@ class BatchSaver
                 if ($replace) {
                     try {
                         $this->elasticaType->deleteDocument($document);
-                    } catch (NotFoundException $e) {}
+                    } catch (NotFoundException $e) {
+                    }
                 }
 
                 $this->elasticaType->addDocument($document);
@@ -66,5 +68,4 @@ class BatchSaver
     {
         $this->elasticaType->getIndex()->refresh();
     }
-
 }

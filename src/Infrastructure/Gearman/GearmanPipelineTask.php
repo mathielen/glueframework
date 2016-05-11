@@ -1,11 +1,11 @@
 <?php
+
 namespace Infrastructure\Gearman;
 
 use Monolog\Logger;
 
 class GearmanPipelineTask
 {
-
     /**
      * @var Logger
      */
@@ -104,5 +104,4 @@ class GearmanPipelineTask
     {
         //$this->log('workloadCallback: ');
     }
-
 }

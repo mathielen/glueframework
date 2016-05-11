@@ -1,11 +1,11 @@
 <?php
+
 namespace Infrastructure\Persistence\ElasticSearch\IdGenerator;
 
 use Infrastructure\Persistence\IdGenerator;
 
 class Incremental implements IdGenerator
 {
-
     /**
      * @var \Elastica_Search
      */
@@ -15,7 +15,7 @@ class Incremental implements IdGenerator
 
     public function __construct(
         \Elastica_Search $elasticSearch,
-        $baseId=0)
+        $baseId = 0)
     {
         $this->elasticSearch = $elasticSearch;
         $this->baseId = $baseId;
@@ -26,7 +26,7 @@ class Incremental implements IdGenerator
         $currentId = $this->currentId();
 
         //increment
-        $currentId++;
+        ++$currentId;
 
         return $currentId;
     }
@@ -47,5 +47,4 @@ class Incremental implements IdGenerator
             return $ds->id;
         }
     }
-
 }

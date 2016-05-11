@@ -1,4 +1,5 @@
 <?php
+
 namespace Infrastructure\Persistence\Salesforce;
 
 use Ddeboer\Salesforce\MapperBundle\Mapper;
@@ -8,7 +9,6 @@ use Infrastructure\Persistence\Repository;
 
 class SalesforceRepository implements \Infrastructure\Persistence\Repository
 {
-
     /**
      * @var Mapper
      */
@@ -36,7 +36,8 @@ class SalesforceRepository implements \Infrastructure\Persistence\Repository
     }
 
     /**
-     * (non-PHPdoc)
+     * (non-PHPdoc).
+     *
      * @see \Infrastructure\Persistence\Repository::getConnection()
      */
     public function getConnection()
@@ -45,7 +46,8 @@ class SalesforceRepository implements \Infrastructure\Persistence\Repository
     }
 
     /**
-     * (non-PHPdoc)
+     * (non-PHPdoc).
+     *
      * @see \Infrastructure\Persistence\Repository::save()
      */
     public function save($object)
@@ -60,7 +62,8 @@ class SalesforceRepository implements \Infrastructure\Persistence\Repository
     }
 
     /**
-     * (non-PHPdoc)
+     * (non-PHPdoc).
+     *
      * @see \Infrastructure\Persistence\Repository::get()
      */
     public function get($id)
@@ -70,10 +73,10 @@ class SalesforceRepository implements \Infrastructure\Persistence\Repository
         }
 
         if ($this->strategy === Repository::STRATEGY_EAGER) {
-            return $this->mapper->findOneBy($this->entityName, ['id'=>$id]);
+            return $this->mapper->findOneBy($this->entityName, ['id' => $id]);
         } else {
             if (!array_key_exists($id, $this->getAll())) {
-                return null;
+                return;
             }
 
             return $this->getAll()[$id];
@@ -81,7 +84,8 @@ class SalesforceRepository implements \Infrastructure\Persistence\Repository
     }
 
     /**
-     * (non-PHPdoc)
+     * (non-PHPdoc).
+     *
      * @see \Infrastructure\Persistence\Repository::delete()
      */
     public function delete($id)
@@ -123,5 +127,4 @@ class SalesforceRepository implements \Infrastructure\Persistence\Repository
 
         return $this->modelList;
     }
-
 }

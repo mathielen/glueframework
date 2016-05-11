@@ -1,11 +1,11 @@
 <?php
+
 namespace Infrastructure\Gearman;
 
 use Monolog\Logger;
 
 class GearmanPipeline
 {
-
     /**
      * @var \GearmanClient
      */
@@ -27,10 +27,11 @@ class GearmanPipeline
     }
 
     /**
-     * creates new pipeline
+     * creates new pipeline.
      *
-     * @param  \GearmanClient                          $gearmanClient
-     * @param  Logger                                  $logger
+     * @param \GearmanClient $gearmanClient
+     * @param Logger         $logger
+     *
      * @return \Infrastructure\Gearman\GearmanPipeline
      */
     public static function create(
@@ -41,9 +42,10 @@ class GearmanPipeline
     }
 
     /**
-     * adds a task to the pipeline
+     * adds a task to the pipeline.
      *
-     * @param  string                                  $task
+     * @param string $task
+     *
      * @return \Infrastructure\Gearman\GearmanPipeline
      */
     public function pipeline($task)
@@ -64,5 +66,4 @@ class GearmanPipeline
         $gearmanPipelineChunk = new GearmanPipelineTask($this->logger, $this->gearmanClient, $this->pipelineStack, $workload);
         $gearmanPipelineChunk->executeNextTask();
     }
-
 }

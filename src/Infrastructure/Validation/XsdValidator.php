@@ -1,9 +1,9 @@
 <?php
+
 namespace Infrastructure\Validation;
 
 class XsdValidator implements ValidatorInterface
 {
-
     private $xsdFilename;
 
     public function __construct($xsdFilename)
@@ -16,7 +16,8 @@ class XsdValidator implements ValidatorInterface
     }
 
     /**
-     * (non-PHPdoc)
+     * (non-PHPdoc).
+     *
      * @see \Infrastructure\Validation\ValidatorInterface::validate()
      */
     public function validate($input)
@@ -46,5 +47,4 @@ class XsdValidator implements ValidatorInterface
             throw new ValidationException('XSD validation of content failed. Errors are: '.print_r($errors, true));
         }
     }
-
 }

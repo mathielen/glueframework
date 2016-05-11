@@ -1,9 +1,9 @@
 <?php
+
 namespace Infrastructure\Email;
 
 class SwiftMailMessageFactory
 {
-
     /**
      * @var \Twig_Environment
      */
@@ -30,5 +30,4 @@ class SwiftMailMessageFactory
 
         return $message;
     }
-
 }

@@ -1,15 +1,14 @@
 <?php
+
 namespace Infrastructure\Spore\SecurityContextMiddleware;
 
 use Symfony\Component\Security\Core\SecurityContextInterface;
-
 use Slim\Middleware;
 use Infrastructure\Persistence\Repository;
 use Symfony\Component\Security\Core\Authentication\Token\PreAuthenticatedToken;
 
 class SessionSecurityContextMiddleware extends Middleware
 {
-
     /**
      * @var SecurityContextInterface
      */
@@ -55,5 +54,4 @@ class SessionSecurityContextMiddleware extends Middleware
 
         $this->next->call();
     }
-
 }

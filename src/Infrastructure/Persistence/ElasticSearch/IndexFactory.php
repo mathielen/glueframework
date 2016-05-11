@@ -1,9 +1,9 @@
 <?php
+
 namespace Infrastructure\Persistence\ElasticSearch;
 
 class IndexFactory
 {
-
     /**
      * @var \Elastica\Type[]
      */
@@ -40,7 +40,7 @@ class IndexFactory
         $this->createIndex($elasticaType, true);
     }
 
-    public function createIndex(\Elastica\Type $elasticaType, $recreate=false)
+    public function createIndex(\Elastica\Type $elasticaType, $recreate = false)
     {
         if ($recreate || !$elasticaType->getIndex()->exists()) {
             $createIndexResult = $elasticaType->getIndex()->create(
@@ -52,18 +52,18 @@ class IndexFactory
                                         'default' => array(
                                                 'type' => 'custom',
                                                 'tokenizer' => 'whitespace',
-                                                'filter' => array('lowercase', 'standard')
+                                                'filter' => array('lowercase', 'standard'),
                                         ),
                                         'indexAnalyzer' => array(
                                                 'tokenizer' => 'standard',
-                                                'filter' => array('lowercase', 'standard')
+                                                'filter' => array('lowercase', 'standard'),
                                         ),
                                         'searchAnalyzer' => array(
                                                 'tokenizer' => 'standard',
-                                                'filter' => array('lowercase', 'standard')
-                                        )
-                                )
-                        )
+                                                'filter' => array('lowercase', 'standard'),
+                                        ),
+                                ),
+                        ),
                 ),
             $recreate
             );
@@ -75,5 +75,4 @@ class IndexFactory
             $elasticaType->setMapping($this->mappings[$dtoName]);
         }
     }
-
 }

@@ -1,9 +1,9 @@
 <?php
+
 namespace Infrastructure\Messaging;
 
 class SaveStatus
 {
-
     public $statusCode = 201;
     public $statusText = 'Created';
     public $location;
@@ -12,5 +12,4 @@ class SaveStatus
     {
         $this->location = $location;
     }
-
 }

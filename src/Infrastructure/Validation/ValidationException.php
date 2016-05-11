@@ -1,4 +1,5 @@
 <?php
+
 namespace Infrastructure\Validation;
 
 use Symfony\Component\Validator\ConstraintViolation;
@@ -6,7 +7,6 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 class ValidationException extends \Exception
 {
-
     /**
      * @return \Infrastructure\Validation\ValidationException
      */
@@ -27,7 +27,6 @@ class ValidationException extends \Exception
      */
     public static function fromField($fieldname, $message)
     {
-        return new self(json_encode(array($fieldname=>$message)));
+        return new self(json_encode(array($fieldname => $message)));
     }
-
 }

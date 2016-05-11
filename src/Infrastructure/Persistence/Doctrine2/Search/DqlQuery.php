@@ -1,11 +1,11 @@
 <?php
+
 namespace Infrastructure\Persistence\Doctrine2\Search;
 
 use Infrastructure\Search\Dto\Query;
 
 class DqlQuery extends Query
 {
-
     public $dql;
     public $dqldata;
 
@@ -14,5 +14,4 @@ class DqlQuery extends Query
         $this->dql = $dql;
         $this->dqldata = $dqldata;
     }
-
 }

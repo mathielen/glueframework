@@ -1,22 +1,30 @@
 <?php
+
 namespace Infrastructure\Persistence\MongoDB;
 
 use Doctrine\MongoDB\Connection;
 use Infrastructure\Exception\ResourceNotFoundException;
+use Mcs\Reporting\CoreBundle\Domain\Utils\AggregateQueryBuilder;
+use Psr\Log\LoggerInterface;
 
 class MongoDBAggregation
 {
-
     /**
      * @var Connection
      */
-    protected $connection;
+    private $connection;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     private $executedQueries = [];
 
-    public function __construct(Connection $connection)
+    public function __construct(Connection $connection, LoggerInterface $logger)
     {
         $this->connection = $connection;
+        $this->logger = $logger;
     }
 
     /**
@@ -40,6 +48,7 @@ class MongoDBAggregation
 
     /**
      * @return \MongoCommandCursor
+     *
      * @throws AggregationException
      * @throws ResourceNotFoundException
      */
@@ -47,22 +56,52 @@ class MongoDBAggregation
     {
         $collection = $this->getMongoClient()->selectDB('reporting_portal')->selectCollection($collectionName);
 
-        $ms = microtime(true);
         try {
+            $this->logger->debug('MongoDB aggregation query: '.json_encode($query));
+
             //aggregateCursor allows more than 16MB in resultset and might be faster
             $result = $collection->aggregateCursor($query);
         } catch (\Exception $e) {
             throw new AggregationException($query, $e);
         }
-        $me = microtime(true);
 
         $this->executedQueries[] = [
-            'collection'=>$collectionName,
-            'query'=>json_encode($query),
-            'duration'=>$me-$ms
+            'collection' => $collectionName,
+            'query' => json_encode($query),
         ];
 
         return $result;
     }
 
+    public function queryCounted($collectionName, AggregateQueryBuilder $queryBuilder)
+    {
+        $data = $this->query($collectionName, $queryBuilder->build());
+
+        $collection = $this->getMongoClient()->selectDB('reporting_portal')->selectCollection($collectionName);
+        $cntQuery = $queryBuilder
+            ->append([
+                '$group' => [
+                    '_id' => '1',
+                    'cnt' => ['$sum' => 1],
+                ],
+            ])
+            ->sort(null)
+            ->limit(null)
+            ->build();
+
+        try {
+            $this->logger->debug('MongoDB aggregation query: '.json_encode($cntQuery));
+
+            $cntResult = $collection->aggregateCursor($cntQuery);
+            $cntResult->rewind();
+            $cnt = $cntResult->current()['cnt'];
+        } catch (\Exception $e) {
+            throw new AggregationException($cntQuery, $e);
+        }
+
+        return [
+            'data' => $data,
+            'count' => $cnt,
+        ];
+    }
 }

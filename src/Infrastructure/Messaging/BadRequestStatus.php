@@ -1,9 +1,9 @@
 <?php
+
 namespace Infrastructure\Messaging;
 
 class BadRequestStatus
 {
-
     public $statusCode = 400;
     public $statusText = 'Bad Request';
     public $reason;
@@ -12,5 +12,4 @@ class BadRequestStatus
     {
         $this->reason = $reason;
     }
-
 }

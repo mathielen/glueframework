@@ -1,11 +1,11 @@
 <?php
+
 namespace Infrastructure\Persistence\MongoDB;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
 
 class MongoDBRepository implements \Infrastructure\Persistence\Repository
 {
-
     /**
      * @var DocumentManager
      */
@@ -22,7 +22,8 @@ class MongoDBRepository implements \Infrastructure\Persistence\Repository
     }
 
     /**
-     * (non-PHPdoc)
+     * (non-PHPdoc).
+     *
      * @see \Infrastructure\Persistence\Repository::getConnection()
      */
     public function getConnection()
@@ -31,7 +32,8 @@ class MongoDBRepository implements \Infrastructure\Persistence\Repository
     }
 
     /**
-     * (non-PHPdoc)
+     * (non-PHPdoc).
+     *
      * @see \Infrastructure\Persistence\Repository::save()
      */
     public function save($object)
@@ -48,7 +50,8 @@ class MongoDBRepository implements \Infrastructure\Persistence\Repository
     }
 
     /**
-     * (non-PHPdoc)
+     * (non-PHPdoc).
+     *
      * @see \Infrastructure\Persistence\Repository::get()
      */
     public function get($id)
@@ -61,7 +64,8 @@ class MongoDBRepository implements \Infrastructure\Persistence\Repository
     }
 
     /**
-     * (non-PHPdoc)
+     * (non-PHPdoc).
+     *
      * @see \Infrastructure\Persistence\Repository::delete()
      */
     public function delete($id)
@@ -76,5 +80,4 @@ class MongoDBRepository implements \Infrastructure\Persistence\Repository
             $this->documentManager->flush();
         }
     }
-
 }

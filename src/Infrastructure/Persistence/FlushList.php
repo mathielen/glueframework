@@ -1,9 +1,9 @@
 <?php
+
 namespace Infrastructure\Persistence;
 
 class FlushList extends \ArrayObject
 {
-
     /**
      * @var callable
      */
@@ -28,7 +28,7 @@ class FlushList extends \ArrayObject
 
     public function addAll(\Traversable $traversable)
     {
-        foreach ($traversable as $k=>$e) {
+        foreach ($traversable as $k => $e) {
             $this[$k] = $e;
         }
 
@@ -59,5 +59,4 @@ class FlushList extends \ArrayObject
         $this->exchangeArray([]);
         gc_collect_cycles();
     }
-
 }

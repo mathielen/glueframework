@@ -1,4 +1,5 @@
 <?php
+
 namespace Infrastructure\Persistence\Salesforce;
 
 use Doctrine\Common\Cache\Cache;
@@ -7,7 +8,6 @@ use Infrastructure\Persistence\Repository;
 
 class SalesforceRepositoryIdentityResolver implements IdentityResolverInterface
 {
-
     /**
      * @var SalesforceRepository
      */
@@ -32,7 +32,7 @@ class SalesforceRepositoryIdentityResolver implements IdentityResolverInterface
         $this->properties = $properties;
 
         if (empty($this->properties)) {
-            throw new \InvalidArgumentException("At least one property must be given");
+            throw new \InvalidArgumentException('At least one property must be given');
         }
     }
 
@@ -98,12 +98,12 @@ class SalesforceRepositoryIdentityResolver implements IdentityResolverInterface
     public function resolveByValues($values)
     {
         if (empty($values)) {
-            throw new \InvalidArgumentException("Cannot resolve id from empty values");
+            throw new \InvalidArgumentException('Cannot resolve id from empty values');
         }
 
         $cacheId = $this->getCacheIdFromValues($values);
         if (!$this->cache()->contains($cacheId)) {
-            return null;
+            return;
         }
 
         return $this->cache()->fetch($cacheId);
@@ -112,7 +112,7 @@ class SalesforceRepositoryIdentityResolver implements IdentityResolverInterface
     public function resolveByModel($model)
     {
         if (empty($model)) {
-            throw new \InvalidArgumentException("Cannot resolve id from empty model");
+            throw new \InvalidArgumentException('Cannot resolve id from empty model');
         }
 
         return $this->resolveByValues($this->getIdValuesFromModel($model));
@@ -125,5 +125,4 @@ class SalesforceRepositoryIdentityResolver implements IdentityResolverInterface
     {
         return $this->idCache;
     }
-
 }

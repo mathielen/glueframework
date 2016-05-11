@@ -1,4 +1,5 @@
 <?php
+
 namespace Infrastructure\Writer;
 
 use Infrastructure\Persistence\PersistenceException;
@@ -6,7 +7,6 @@ use Infrastructure\Persistence\Repository;
 
 class SimpleWriter
 {
-
     /**
      * @var Repository
      */
@@ -19,7 +19,7 @@ class SimpleWriter
         $entityClass)
     {
         if (empty($entityClass) || !class_exists($entityClass)) {
-            throw new \InvalidArgumentException("entityClass must be a classname and cannot be empty");
+            throw new \InvalidArgumentException('entityClass must be a classname and cannot be empty');
         }
 
         $this->repository = $repository;
@@ -45,7 +45,7 @@ class SimpleWriter
         }
     }
 
-    public function save($entity, $data=array())
+    public function save($entity, $data = array())
     {
         $this->translate($data);
 
@@ -71,5 +71,4 @@ class SimpleWriter
     {
         $this->repository->delete($id);
     }
-
 }

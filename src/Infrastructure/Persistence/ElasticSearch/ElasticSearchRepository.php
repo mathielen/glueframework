@@ -1,9 +1,9 @@
 <?php
+
 namespace Infrastructure\Persistence\ElasticSearch;
 
 class ElasticSearchRepository implements \Infrastructure\Persistence\Repository
 {
-
     /**
      * @var \Elastica\Type
      */
@@ -23,8 +23,10 @@ class ElasticSearchRepository implements \Infrastructure\Persistence\Repository
     }
 
     /**
-     * (non-PHPdoc)
+     * (non-PHPdoc).
+     *
      * @see Infrastructure_Persistence_Repository::getConnection()
+     *
      * @return Elastica_Type
      */
     public function getConnection()
@@ -33,7 +35,8 @@ class ElasticSearchRepository implements \Infrastructure\Persistence\Repository
     }
 
     /**
-     * (non-PHPdoc)
+     * (non-PHPdoc).
+     *
      * @see Infrastructure_Persistence_Repository::save()
      */
     public function save($object)
@@ -46,7 +49,8 @@ class ElasticSearchRepository implements \Infrastructure\Persistence\Repository
     }
 
     /**
-     * (non-PHPdoc)
+     * (non-PHPdoc).
+     *
      * @see Infrastructure_Persistence_Repository::get()
      */
     public function get($id)
@@ -58,7 +62,7 @@ class ElasticSearchRepository implements \Infrastructure\Persistence\Repository
         try {
             $document = $this->elasticaType->getDocument($id);
         } catch (\Elastica\Exception\NotFoundException $e) {
-            return null;
+            return;
         }
 
         $object = $this->documentFactory->fromElasticSearchDocument($document);
@@ -67,7 +71,8 @@ class ElasticSearchRepository implements \Infrastructure\Persistence\Repository
     }
 
     /**
-     * (non-PHPdoc)
+     * (non-PHPdoc).
+     *
      * @see Infrastructure_Persistence_Repository::delete()
      */
     public function delete($id)
@@ -81,5 +86,4 @@ class ElasticSearchRepository implements \Infrastructure\Persistence\Repository
 
         return $result;
     }
-
 }

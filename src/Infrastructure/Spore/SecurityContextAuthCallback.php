@@ -1,13 +1,12 @@
 <?php
+
 namespace Infrastructure\Spore;
 
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
 class SecurityContextAuthCallback
 {
-
     /**
      * @var SecurityContextInterface
      */
@@ -36,5 +35,4 @@ class SecurityContextAuthCallback
 
         return false;
     }
-
 }

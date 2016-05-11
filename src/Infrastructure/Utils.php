@@ -1,18 +1,18 @@
 <?php
+
 namespace Infrastructure;
 
 class Utils
 {
-
     /**
      * @return array
      */
-    public static function explodeArray(array $input, $separator='=', $defaultValue=true)
+    public static function explodeArray(array $input, $separator = '=', $defaultValue = true)
     {
         $values = [];
         foreach ($input as $item) {
-            @list ($k, $v) = explode('=', $item);
-            $values[$k] = $v?$v:$defaultValue;
+            @list($k, $v) = explode('=', $item);
+            $values[$k] = $v ? $v : $defaultValue;
         }
 
         return $values;
@@ -26,7 +26,7 @@ class Utils
         $retVal = '';
 
         foreach ($array as $cKey => $cValue) {
-            $retVal .= $cKey . $keyvalue_seperator . $cValue . $separator;
+            $retVal .= $cKey.$keyvalue_seperator.$cValue.$separator;
         }
         $retVal = substr($retVal, 0, strlen($retVal) - strlen($separator));
 
@@ -34,19 +34,21 @@ class Utils
     }
 
     /**
-     * recusive join
+     * recusive join.
      */
     public static function joinr($delim, $value)
     {
         $cpy = array();
         foreach ($value as $val) {
-            if (is_array($delim))
+            if (is_array($delim)) {
                 $d = count($delim) > 1 ? array_slice($delim, 1) : $delim[0];
-            else $d = $delim;
+            } else {
+                $d = $delim;
+            }
             $cpy[] = is_array($val) ? self::joinr($d, $val) : $val;
         }
 
-        return join(is_array($delim) ? $delim[0] : $delim, $cpy);
+        return implode(is_array($delim) ? $delim[0] : $delim, $cpy);
     }
 
     public static function jsonDecode($json)
@@ -73,7 +75,6 @@ class Utils
     public static function getVariableHint($propertyComment)
     {
         if (preg_match('/@var\s+([^\s]+)/', $propertyComment, $matches)) {
-
             list(, $type) = $matches;
 
             return $type;
@@ -105,7 +106,7 @@ class Utils
      */
     public static function isWindows()
     {
-        return (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN');
+        return strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
     }
 
     /**
@@ -113,7 +114,7 @@ class Utils
      */
     public static function isCli()
     {
-        return php_sapi_name() == "cli";
+        return php_sapi_name() == 'cli';
     }
 
     /**
@@ -122,7 +123,7 @@ class Utils
     public static function whoAmI()
     {
         if (self::isWindows()) {
-            $user = getenv("username");
+            $user = getenv('username');
         } else {
             $processUser = posix_getpwuid(posix_geteuid());
             $user = $processUser['name'];
@@ -168,8 +169,7 @@ class Utils
             $ranges[] = $lastItem;
         } else {
             $firstItem = reset($currentRange);
-            $ranges[] = $firstItem . '-' . $lastItem;
+            $ranges[] = $firstItem.'-'.$lastItem;
         }
     }
-
 }

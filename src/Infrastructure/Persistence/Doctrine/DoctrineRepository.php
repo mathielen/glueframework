@@ -1,4 +1,5 @@
 <?php
+
 namespace Infrastructure\Persistence\Doctrine;
 
 use Infrastructure\Persistence\PersistenceException;
@@ -6,7 +7,6 @@ use Infrastructure\Persistence\Repository;
 
 class DoctrineRepository implements Repository
 {
-
     /**
      * @var \Doctrine_Connection
      */
@@ -27,7 +27,8 @@ class DoctrineRepository implements Repository
     }
 
     /**
-     * (non-PHPdoc)
+     * (non-PHPdoc).
+     *
      * @see \Infrastructure\Persistence\Repository::getConnection()
      */
     public function getConnection()
@@ -36,7 +37,8 @@ class DoctrineRepository implements Repository
     }
 
     /**
-     * (non-PHPdoc)
+     * (non-PHPdoc).
+     *
      * @see \Infrastructure\Persistence\Repository::save()
      */
     public function save($object)
@@ -45,14 +47,15 @@ class DoctrineRepository implements Repository
             throw new PersistenceException('Cannot persist object. It doesnt extends Doctrine_Record.');
         }
         if (@get_class($object) != $this->dtoName) {
-            throw new PersistenceException('Wrong class supplied. Expected classname: '.$this->dtoName. ' was '.@get_class($object));
+            throw new PersistenceException('Wrong class supplied. Expected classname: '.$this->dtoName.' was '.@get_class($object));
         }
 
         $object->save();
     }
 
     /**
-     * (non-PHPdoc)
+     * (non-PHPdoc).
+     *
      * @see \Infrastructure\Persistence\Repository::get()
      */
     public function get($id)
@@ -65,7 +68,8 @@ class DoctrineRepository implements Repository
     }
 
     /**
-     * (non-PHPdoc)
+     * (non-PHPdoc).
+     *
      * @see \Infrastructure\Persistence\Repository::delete()
      */
     public function delete($id)
@@ -81,5 +85,4 @@ class DoctrineRepository implements Repository
 
         $dto->delete();
     }
-
 }

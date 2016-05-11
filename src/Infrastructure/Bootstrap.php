@@ -1,4 +1,5 @@
 <?php
+
 namespace Infrastructure;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -11,7 +12,6 @@ use Monolog\Logger;
 
 class Bootstrap
 {
-
     /**
      * @var array
      */
@@ -30,6 +30,7 @@ class Bootstrap
 
     /**
      * @throws \InvalidArgumentException
+     *
      * @return \Infrastructure\Bootstrap
      */
     public function sanitize()
@@ -59,11 +60,11 @@ class Bootstrap
 
     private function addDirectory($prefixName, $defaultRootSuffix)
     {
-        $configKey = $prefixName . '_dir';
+        $configKey = $prefixName.'_dir';
 
         //apply default
         if (!isset($this->config[$configKey])) {
-            $this->config[$configKey] = $this->config['root_dir'] . $defaultRootSuffix;
+            $this->config[$configKey] = $this->config['root_dir'].$defaultRootSuffix;
         }
 
         //realpathify
@@ -72,6 +73,7 @@ class Bootstrap
 
     /**
      * @throws \DomainException
+     *
      * @return \Infrastructure\Bootstrap
      */
     public function apply()
@@ -81,14 +83,14 @@ class Bootstrap
         }
 
         if ($this->config['debug']) {
-            ini_set("display_errors", TRUE);
-            ini_set('display_startup_errors', TRUE);
+            ini_set('display_errors', true);
+            ini_set('display_startup_errors', true);
             error_reporting(E_ALL ^ E_NOTICE);
             $this->config['loglevel'] = Logger::DEBUG;
         }
 
-        if (file_exists($this->config['config_dir'] . '/config.ini')) {
-            $configIni = parse_ini_file($this->config['config_dir'] . '/config.ini');
+        if (file_exists($this->config['config_dir'].'/config.ini')) {
+            $configIni = parse_ini_file($this->config['config_dir'].'/config.ini');
             $this->config = array_merge($this->config, $configIni);
         }
 
@@ -101,7 +103,7 @@ class Bootstrap
     public function container()
     {
         $containerCacheClass = $this->config['container_cacheclassname'];
-        $containerCacheFile = $this->config['temp_dir'] . '/'.$containerCacheClass.'.php';
+        $containerCacheFile = $this->config['temp_dir'].'/'.$containerCacheClass.'.php';
         $containerConfigCache = new ConfigCache($containerCacheFile, $this->config['debug']);
 
         if ($this->config['debug'] || !$containerConfigCache->isFresh()) {
@@ -110,7 +112,7 @@ class Bootstrap
             $loader = new XmlFileLoader($containerBuilder, new FileLocator($this->config['config_dir']));
             $loader->load($this->config['context_file']);
 
-            foreach ($this->config as $name=>$value) {
+            foreach ($this->config as $name => $value) {
                 $containerBuilder->setParameter(strtolower($name), $value);
             }
 
@@ -146,13 +148,14 @@ class Bootstrap
             'debug' => false,
             'container_cacheclassname' => 'CachedContainer',
             'context_file' => 'context.xml',
-            'loglevel' => Logger::INFO
+            'loglevel' => Logger::INFO,
         );
     }
 
     /**
      * @return Bootstrap
-     * @param  array     $config
+     *
+     * @param array $config
      */
     public static function boot(array $config = array())
     {
@@ -180,7 +183,6 @@ class Bootstrap
             return self::$container->getParameter('debug');
         }
 
-        return null;
+        return;
     }
-
 }

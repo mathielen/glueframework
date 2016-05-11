@@ -1,9 +1,9 @@
 <?php
+
 namespace Infrastructure\Messaging;
 
 class InternalServerErrorStatus
 {
-
     public $statusCode = 500;
     public $statusText = 'Internal Server Error';
     public $reason;
@@ -12,5 +12,4 @@ class InternalServerErrorStatus
     {
         $this->reason = $reason;
     }
-
 }

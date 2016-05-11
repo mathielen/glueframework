@@ -1,10 +1,11 @@
 <?php
+
 namespace Infrastructure\Cache;
 
 use Doctrine\Common\Cache\Cache;
+
 class FileContentCache implements Cache
 {
-
     /**
      * The cache directory.
      *
@@ -29,14 +30,14 @@ class FileContentCache implements Cache
      */
     public function __construct($directory, $extension = null)
     {
-        if ( ! is_dir($directory) && ! @mkdir($directory, 0777, true)) {
+        if (!is_dir($directory) && !@mkdir($directory, 0777, true)) {
             throw new \InvalidArgumentException(sprintf(
                     'The directory "%s" does not exist and could not be created.',
                     $directory
             ));
         }
 
-        if ( ! is_writable($directory)) {
+        if (!is_writable($directory)) {
             throw new \InvalidArgumentException(sprintf(
                     'The directory "%s" is not writable.',
                     $directory
@@ -51,13 +52,13 @@ class FileContentCache implements Cache
     {
         $filename = preg_replace('/[^A-Za-z0-9 ]/', '', $id);
 
-        return $this->directory . DIRECTORY_SEPARATOR . $filename;
+        return $this->directory.DIRECTORY_SEPARATOR.$filename;
     }
 
     public function fetch($id)
     {
         if (!$this->contains($id)) {
-            return null;
+            return;
         }
 
         return file_get_contents($this->getFilename($id));
@@ -80,7 +81,6 @@ class FileContentCache implements Cache
 
     public function getStats()
     {
-        return null;
+        return;
     }
-
 }

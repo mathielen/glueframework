@@ -1,17 +1,14 @@
 <?php
+
 namespace Infrastructure\Spore\SecurityContextMiddleware;
 
 use Infrastructure\Search\Finder;
-
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-
 use Symfony\Component\Security\Core\SecurityContextInterface;
-
 use Slim\Middleware;
 
 class BasicAuthSecurityContextMiddleware extends Middleware
 {
-
     /**
      * @var SecurityContextInterface
      */
@@ -45,5 +42,4 @@ class BasicAuthSecurityContextMiddleware extends Middleware
 
         $this->next->call();
     }
-
 }

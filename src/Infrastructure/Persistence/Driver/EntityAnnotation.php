@@ -1,4 +1,5 @@
 <?php
+
 namespace Infrastructure\Persistence\Driver;
 
 use Doctrine\Common\Annotations\Annotation;
@@ -27,8 +28,7 @@ final class EntityAnnotation extends Annotation
     public $index = null; //not_analyzed
 
     /**
-     * @var boolean
+     * @var bool
      */
     public $include_in_all = null;
-
 }

@@ -2,8 +2,6 @@
 
 namespace Infrastructure\Persistence\Rest;
 
-
-use Doctrine\Common\Persistence\ObjectRepository;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use Infrastructure\Persistence\Repository;
@@ -11,7 +9,6 @@ use JMS\Serializer\SerializerInterface;
 
 class RestRepository implements \Infrastructure\Persistence\Repository
 {
-
     /**
      * @var Client
      */
@@ -32,7 +29,7 @@ class RestRepository implements \Infrastructure\Persistence\Repository
     }
 
     /**
-     * returns specific connection object for this kind of repository
+     * returns specific connection object for this kind of repository.
      */
     public function getConnection()
     {
@@ -40,7 +37,7 @@ class RestRepository implements \Infrastructure\Persistence\Repository
     }
 
     /**
-     * persists given $object in repository
+     * persists given $object in repository.
      */
     public function save($object)
     {
@@ -48,7 +45,7 @@ class RestRepository implements \Infrastructure\Persistence\Repository
     }
 
     /**
-     * fetches an object identified by given $id
+     * fetches an object identified by given $id.
      */
     public function get($id)
     {
@@ -56,22 +53,22 @@ class RestRepository implements \Infrastructure\Persistence\Repository
             $response = $this->client->get($id);
         } catch (ClientException $e) {
             if ($e->getResponse()->getStatusCode() === 404) {
-                return null;
+                return;
             }
 
             throw $e;
         }
 
         $responseJson = (string) $response->getBody();
+
         return $this->serializer->deserialize($responseJson, $this->cls, 'json');
     }
 
     /**
-     * deletes object from repository identified by given $id
+     * deletes object from repository identified by given $id.
      */
     public function delete($id)
     {
         // TODO: Implement delete() method.
     }
-    
 }
