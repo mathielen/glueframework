@@ -2,6 +2,9 @@
 
 namespace Infrastructure\Persistence\ElasticSearch;
 
+use Elastica\Document;
+use JMS\Serializer\SerializerInterface;
+
 class ElasticSearchRepository implements \Infrastructure\Persistence\Repository
 {
     /**
@@ -10,16 +13,20 @@ class ElasticSearchRepository implements \Infrastructure\Persistence\Repository
     private $elasticaType;
 
     /**
-     * @var DocumentFactory
+     * @var SerializerInterface
      */
-    private $documentFactory;
+    private $serializer;
+
+    private $cls;
 
     public function __construct(
         \Elastica\Type $elasticaType,
-        DocumentFactory $documentFactory)
+        SerializerInterface $serializer,
+        $cls)
     {
         $this->elasticaType = $elasticaType;
-        $this->documentFactory = $documentFactory;
+        $this->serializer = $serializer;
+        $this->cls = $cls;
     }
 
     /**
@@ -65,9 +72,16 @@ class ElasticSearchRepository implements \Infrastructure\Persistence\Repository
             return;
         }
 
-        $object = $this->documentFactory->fromElasticSearchDocument($document);
+        $entity = $this->deserialize($document);
 
-        return $object;
+        return $entity;
+    }
+
+    protected function deserialize(Document $document)
+    {
+        $entity = $this->serializer->deserialize(json_encode($document->getData()), $this->cls, 'json');
+
+        return $entity;
     }
 
     /**

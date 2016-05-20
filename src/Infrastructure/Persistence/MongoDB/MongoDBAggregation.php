@@ -6,6 +6,7 @@ use Doctrine\MongoDB\Connection;
 use Infrastructure\Exception\ResourceNotFoundException;
 use Mcs\Reporting\CoreBundle\Domain\Utils\AggregateQueryBuilder;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 class MongoDBAggregation
 {
@@ -21,10 +22,10 @@ class MongoDBAggregation
 
     private $executedQueries = [];
 
-    public function __construct(Connection $connection, LoggerInterface $logger)
+    public function __construct(Connection $connection, LoggerInterface $logger = null)
     {
         $this->connection = $connection;
-        $this->logger = $logger;
+        $this->logger = $logger ? $logger : new NullLogger();
     }
 
     /**

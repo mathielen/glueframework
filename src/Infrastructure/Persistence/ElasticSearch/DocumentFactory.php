@@ -3,11 +3,12 @@
 namespace Infrastructure\Persistence\ElasticSearch;
 
 use Infrastructure\Serialization\Utils;
+use Sylius\Component\Product\Model\Product;
 
 class DocumentFactory
 {
     /**
-     * @return \Elastica_Document
+     * @return \Elastica\Document
      */
     public function toElasticSearchDocument(EntityInterface $entity)
     {
@@ -17,14 +18,14 @@ class DocumentFactory
         return $document;
     }
 
-    public function fromElasticSearchDocument(\Elastica_Document $document)
+    public function fromElasticSearchDocument(\Elastica\Document $document)
     {
         $stdClassObject = new \stdClass();
         foreach ($document->getData() as $key => $value) {
             $stdClassObject->$key = $value;
         }
 
-        $object = Utils::recursiveCastToObject($stdClassObject, $document->getType());
+        $object = Utils::recursiveCastToObject($stdClassObject, Product::class); //$document->getType());
 
         return $object;
     }
