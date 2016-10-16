@@ -14,6 +14,8 @@ class RestRepository implements \Infrastructure\Persistence\Repository
      */
     private $client;
 
+    private $resourcePath;
+
     /**
      * @var SerializerInterface
      */
@@ -21,9 +23,10 @@ class RestRepository implements \Infrastructure\Persistence\Repository
 
     private $cls;
 
-    public function __construct(Client $client, SerializerInterface $serializer, $cls)
+    public function __construct(Client $client, $resourcePath, SerializerInterface $serializer, $cls)
     {
         $this->client = $client;
+        $this->resourcePath = $resourcePath;
         $this->serializer = $serializer;
         $this->cls = $cls;
     }
@@ -50,8 +53,9 @@ class RestRepository implements \Infrastructure\Persistence\Repository
     public function get($id)
     {
         try {
-            $response = $this->client->get($id);
+            $response = $this->client->get($this->resourcePath.'/'.$id);
         } catch (ClientException $e) {
+            die($e);
             if ($e->getResponse()->getStatusCode() === 404) {
                 return;
             }
