@@ -55,7 +55,6 @@ class RestRepository implements \Infrastructure\Persistence\Repository
         try {
             $response = $this->client->get($this->resourcePath.'/'.$id);
         } catch (ClientException $e) {
-            die($e);
             if ($e->getResponse()->getStatusCode() === 404) {
                 return;
             }
