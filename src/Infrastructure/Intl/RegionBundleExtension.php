@@ -199,6 +199,7 @@ class RegionBundleExtension
         'RU' => 'EU',
         'RW' => 'AF',
         'SH' => 'AF',
+        'TA' => 'AF',
         'KN' => 'NA',
         'LC' => 'NA',
         'PM' => 'NA',
