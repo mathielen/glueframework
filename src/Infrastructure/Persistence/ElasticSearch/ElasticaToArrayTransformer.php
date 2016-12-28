@@ -16,7 +16,9 @@ class ElasticaToArrayTransformer implements ElasticaToModelTransformerInterface
      **/
     public function transform(array $elasticaObjects)
     {
-        return array_map(function (\Elastica\Result $e) { return $e->getData(); }, $elasticaObjects);
+        return array_map(function (\Elastica\Result $e) {
+            return $e->getData();
+        }, $elasticaObjects);
     }
 
     public function hybridTransform(array $elasticaObjects)

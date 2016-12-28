@@ -23,8 +23,8 @@ class FileContentCache implements Cache
     /**
      * Constructor.
      *
-     * @param string      $directory The cache directory.
-     * @param string|null $extension The cache file extension.
+     * @param string      $directory The cache directory
+     * @param string|null $extension The cache file extension
      *
      * @throws \InvalidArgumentException
      */
