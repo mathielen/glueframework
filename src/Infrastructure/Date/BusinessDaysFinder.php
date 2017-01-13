@@ -2,6 +2,7 @@
 
 namespace Infrastructure\Date;
 
+use Assert\Assertion;
 use Doctrine\Common\Cache\Cache;
 use GuzzleHttp\Client;
 use Infrastructure\Exception\NotImplementedException;
@@ -50,7 +51,7 @@ class BusinessDaysFinder
         }
 
         $province = $provinceCode ? $provinceCode : 'NATIONAL';
-        $url = '?jahr='.$date->format('Y').'&nur_land='.$province;
+        $url = '?jahr=' . $date->format('Y') . '&nur_land=' . $province;
 
         $holidays = $this->cache->fetch($url);
 
@@ -73,15 +74,41 @@ class BusinessDaysFinder
     /**
      * @return \DateTime
      */
-    public function getNextBusinessday(\DateTime $date, $countryCode, $provinceCode = null)
+    public function addBusinessdays($days, \DateTime $date, $countryCode, $provinceCode = null)
     {
+        Assertion::integer($days);
+        Assertion::notEmpty($days);
+
         if ($countryCode != 'DE') {
             throw new NotImplementedException('Only DE supported');
         }
 
-        do {
-            $date->modify('+1 day');
-        } while (!$this->isBusinessDay($date, $countryCode, $provinceCode));
+        for ($i = 0; $i < $days; $i++) {
+            do {
+                $date->modify('+1 day');
+            } while (!$this->isBusinessDay($date, $countryCode, $provinceCode));
+        }
+
+        return $date;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function subBusinessdays($days, \DateTime $date, $countryCode, $provinceCode = null)
+    {
+        Assertion::integer($days);
+        Assertion::notEmpty($days);
+
+        if ($countryCode != 'DE') {
+            throw new NotImplementedException('Only DE supported');
+        }
+
+        for ($i = 0; $i < $days; $i++) {
+            do {
+                $date->modify('-1 day');
+            } while (!$this->isBusinessDay($date, $countryCode, $provinceCode));
+        }
 
         return $date;
     }
