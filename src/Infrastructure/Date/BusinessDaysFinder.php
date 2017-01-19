@@ -77,7 +77,6 @@ class BusinessDaysFinder
     public function addBusinessdays($days, \DateTime $date, $countryCode, $provinceCode = null)
     {
         Assertion::integer($days);
-        Assertion::notEmpty($days);
 
         if ($countryCode != 'DE') {
             throw new NotImplementedException('Only DE supported');
@@ -98,7 +97,6 @@ class BusinessDaysFinder
     public function subBusinessdays($days, \DateTime $date, $countryCode, $provinceCode = null)
     {
         Assertion::integer($days);
-        Assertion::notEmpty($days);
 
         if ($countryCode != 'DE') {
             throw new NotImplementedException('Only DE supported');
