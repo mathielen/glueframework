@@ -101,7 +101,7 @@ class MongoDBAggregation
         }
 
         return [
-            'data' => $data,
+            'data' => iterator_to_array($data),
             'count' => $cnt,
         ];
     }
