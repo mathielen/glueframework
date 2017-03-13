@@ -59,6 +59,9 @@ class BusinessDaysFinder
             $response = $this->client->get($url);
             $holidays = json_decode($response->getBody(), true);
 
+            if (!$holidays) {
+                throw new \LogicException("Could not get holidays for Year: ".$date->format('Y').", Country: $countryCode, Province: $provinceCode");
+            }
             $this->cache->save($url, $holidays);
         }
 
