@@ -4,6 +4,7 @@ namespace Infrastructure\Persistence\Rest;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ServerException;
 use Infrastructure\Persistence\Repository;
 use JMS\Serializer\SerializerInterface;
 
@@ -59,7 +60,9 @@ class RestRepository implements \Infrastructure\Persistence\Repository
                 return;
             }
 
-            throw $e;
+            throw new \LogicException("Could not fetch data from REST Endpoint. Response was: ".$e->getResponse()->getBody(), 0, $e);
+        } catch (ServerException $e) {
+            throw new \LogicException("Could not fetch data from REST Endpoint. Response was: ".$e->getResponse()->getBody(), 0, $e);
         }
 
         $responseJson = (string) $response->getBody();
