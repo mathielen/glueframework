@@ -54,18 +54,18 @@ class RestRepository implements \Infrastructure\Persistence\Repository
     public function get($id)
     {
         try {
-            $response = $this->client->get($this->resourcePath.'/'.$id);
+            $response = $this->client->get($this->resourcePath . '/' . $id, ['headers' => ['Accept' => 'application/json']]);
         } catch (ClientException $e) {
             if ($e->getResponse()->getStatusCode() === 404) {
                 return;
             }
 
-            throw new \LogicException("Could not fetch data from REST Endpoint. Response was: ".$e->getResponse()->getBody(), 0, $e);
+            throw new \LogicException("Could not fetch data from REST Endpoint. Response was: " . $e->getResponse()->getBody(), 0, $e);
         } catch (ServerException $e) {
-            throw new \LogicException("Could not fetch data from REST Endpoint. Response was: ".$e->getResponse()->getBody(), 0, $e);
+            throw new \LogicException("Could not fetch data from REST Endpoint. Response was: " . $e->getResponse()->getBody(), 0, $e);
         }
 
-        $responseJson = (string) $response->getBody();
+        $responseJson = (string)$response->getBody();
 
         return $this->serializer->deserialize($responseJson, $this->cls, 'json');
     }
