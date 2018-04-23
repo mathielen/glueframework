@@ -21,14 +21,17 @@ class BusinessDaysFinder
 
     private $weekDays;
 
-    public function __construct(Client $client, Cache $cache, $weekDays = [1, 2, 3, 4, 5])
+    public function __construct(Client $client, Cache $cache, array $weekDays = [1, 2, 3, 4, 5])
     {
         $this->client = $client;
         $this->cache = $cache;
         $this->weekDays = $weekDays;
     }
 
-    public function isBusinessDay(\DateTime $date, $countryCode, $provinceCode = null)
+    /**
+     * @throws NotImplementedException
+     */
+    public function isBusinessDay(\DateTime $date, string $countryCode, string $provinceCode = null): bool
     {
         if ($countryCode != 'DE') {
             throw new NotImplementedException('Only DE supported');
@@ -44,7 +47,10 @@ class BusinessDaysFinder
         return !$this->isHoliday($date, $countryCode, $provinceCode);
     }
 
-    public function isHoliday(\DateTime $date, $countryCode, $provinceCode = null)
+    /**
+     * @throws NotImplementedException
+     */
+    public function isHoliday(\DateTime $date, string $countryCode, string $provinceCode = null): bool
     {
         if ($countryCode != 'DE') {
             throw new NotImplementedException('Only DE supported');
@@ -75,12 +81,10 @@ class BusinessDaysFinder
     }
 
     /**
-     * @return \DateTime
+     * @throws NotImplementedException
      */
-    public function addBusinessdays($days, \DateTime $date, $countryCode, $provinceCode = null)
+    public function addBusinessdays(int $days, \DateTime $date, string $countryCode, string $provinceCode = null): \DateTime
     {
-        Assertion::integer($days);
-
         if ($countryCode != 'DE') {
             throw new NotImplementedException('Only DE supported');
         }
@@ -95,12 +99,10 @@ class BusinessDaysFinder
     }
 
     /**
-     * @return \DateTime
+     * @throws NotImplementedException
      */
-    public function subBusinessdays($days, \DateTime $date, $countryCode, $provinceCode = null)
+    public function subBusinessdays(int $days, \DateTime $date, string $countryCode, string $provinceCode = null): \DateTime
     {
-        Assertion::integer($days);
-
         if ($countryCode != 'DE') {
             throw new NotImplementedException('Only DE supported');
         }
