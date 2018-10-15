@@ -19,11 +19,11 @@ class QueryResult
     /**
      * @return QueryResult
      */
-    public static function fromDataset($data, $total = null)
+    public static function fromDataset($data, $total = null, $query = null)
     {
         return new self(
             $data,
-            array('total' => is_null($total) ? count($data) : $total)
+            array('total' => is_null($total) ? count($data) : $total, 'query'=>$query)
         );
     }
 
